@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 17:17+0000\n"
+"POT-Creation-Date: 2026-11-16 10:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/"
@@ -278,7 +278,7 @@ msgstr ""
 "Sorumlu yönetici, başkaları tarafından başlatılan gidiş formunu doldurması "
 "için uyarılsın"
 
-#: ⁨standard input⁩:199
+#: ⁨standard input⁩:200
 msgid "All"
 msgstr "Tümü"
 
@@ -1093,8 +1093,8 @@ msgstr "Şunun ayrılması"
 msgid "Descending"
 msgstr "Azalan"
 
-#: src/Config.php:138 ⁨standard input⁩:708 ⁨standard input⁩:44 ⁨standard input⁩:348
-#: ⁨standard input⁩:40 ⁨standard input⁩:45 ⁨standard input⁩:42 ⁨standard input⁩:35
+#: src/Config.php:138 ⁨standard input⁩:708 ⁨standard input⁩:45 ⁨standard input⁩:348
+#: ⁨standard input⁩:40 ⁨standard input⁩:42 ⁨standard input⁩:35
 msgid "Description"
 msgstr "Açıklama"
 
@@ -1276,7 +1276,7 @@ msgstr "İş / bütçe yönetimi"
 msgid "Empty for non defined"
 msgstr "Tanımsız ise boş bırakın"
 
-#: ⁨standard input⁩:41 ⁨standard input⁩:77 ⁨standard input⁩:62 ⁨standard input⁩:60
+#: ⁨standard input⁩:42 ⁨standard input⁩:77 ⁨standard input⁩:62 ⁨standard input⁩:60
 #: ⁨standard input⁩:33 ⁨standard input⁩:73
 msgid "End date"
 msgstr "Bitiş tarihi"
@@ -1313,11 +1313,11 @@ msgstr "Kaynağın bilişim gereksinimlerini yazın"
 msgid "Entities allowed to transfer a resource"
 msgstr "Bir kaynağa aktarılabilecek birimler"
 
-#: ⁨standard input⁩:387
+#: ⁨standard input⁩:386
 msgid "Entries to show:"
 msgstr "Görüntülenecek kayıtlar:"
 
-#: ⁨standard input⁩:143
+#: ⁨standard input⁩:144
 msgid "Export"
 msgstr "Dışa aktar"
 
@@ -1349,7 +1349,7 @@ msgstr "Alan eşleşmesi"
 msgid "File not found"
 msgstr "Dosya bulunamadı"
 
-#: ⁨standard input⁩:137
+#: ⁨standard input⁩:138
 msgid "Filter"
 msgstr "Süz"
 
@@ -1978,7 +1978,7 @@ msgctxt "button"
 msgid "Next step"
 msgstr "Sonraki adım"
 
-#: ⁨standard input⁩:204 ⁨standard input⁩:344 ⁨standard input⁩:199
+#: ⁨standard input⁩:205 ⁨standard input⁩:343 ⁨standard input⁩:199
 msgid "No"
 msgstr "Hayır"
 
@@ -2021,7 +2021,7 @@ msgstr "Henüz bir içe aktarma yapılandırılmamış"
 msgid "No query could be suggested for this difference."
 msgstr "Bu fark için herhangi bir sorgu önerilemedi."
 
-#: ⁨standard input⁩:34 ⁨standard input⁩:64 ⁨standard input⁩:360 ⁨standard input⁩:58
+#: ⁨standard input⁩:34 ⁨standard input⁩:64 ⁨standard input⁩:359 ⁨standard input⁩:58
 #: ⁨standard input⁩:72 ⁨standard input⁩:31 ⁨standard input⁩:33
 msgid "No results found"
 msgstr "Herhangi bir sonuç bulunamadı"
@@ -2621,7 +2621,7 @@ msgstr "Güvenlik uygunluğu yönetimi"
 msgid "See variable available"
 msgstr "Değişken adını görüntüle"
 
-#: ⁨standard input⁩:238
+#: ⁨standard input⁩:239
 msgid "Select item"
 msgstr "Ögeyi seçin"
 
@@ -3207,7 +3207,7 @@ msgstr "Doğrulama modülü kullanılsın"
 msgid "Used for planning"
 msgstr "Planlamada kullanılacak"
 
-#: ⁨standard input⁩:38
+#: ⁨standard input⁩:39
 msgid "User"
 msgstr "Kullanıcı"
 
@@ -3289,7 +3289,7 @@ msgstr[1] "Çalışma profilleri"
 msgid "Writer"
 msgstr "Yazar"
 
-#: ⁨standard input⁩:201 ⁨standard input⁩:342 ⁨standard input⁩:196
+#: ⁨standard input⁩:202 ⁨standard input⁩:341 ⁨standard input⁩:196
 msgid "Yes"
 msgstr "Evet"
 

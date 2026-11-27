@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Resources plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 17:17+0000\n"
+"POT-Creation-Date: 2026-11-16 10:21+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -278,7 +278,7 @@ msgid ""
 "Alert manager in charge to complete the departure form started by others"
 msgstr ""
 
-#: ⁨standard input⁩:199
+#: ⁨standard input⁩:200
 msgid "All"
 msgstr ""
 
@@ -1104,8 +1104,8 @@ msgstr "Salida de"
 msgid "Descending"
 msgstr ""
 
-#: src/Config.php:138 ⁨standard input⁩:708 ⁨standard input⁩:44 ⁨standard input⁩:348
-#: ⁨standard input⁩:40 ⁨standard input⁩:45 ⁨standard input⁩:42 ⁨standard input⁩:35
+#: src/Config.php:138 ⁨standard input⁩:708 ⁨standard input⁩:45 ⁨standard input⁩:348
+#: ⁨standard input⁩:40 ⁨standard input⁩:42 ⁨standard input⁩:35
 msgid "Description"
 msgstr ""
 
@@ -1295,7 +1295,7 @@ msgstr "Gestión de empleos y presupuestos"
 msgid "Empty for non defined"
 msgstr "Vacío para no definido"
 
-#: ⁨standard input⁩:41 ⁨standard input⁩:77 ⁨standard input⁩:62 ⁨standard input⁩:60
+#: ⁨standard input⁩:42 ⁨standard input⁩:77 ⁨standard input⁩:62 ⁨standard input⁩:60
 #: ⁨standard input⁩:33 ⁨standard input⁩:73
 msgid "End date"
 msgstr ""
@@ -1333,11 +1333,11 @@ msgstr "Introduzca las necesidades informáticas del recurso"
 msgid "Entities allowed to transfer a resource"
 msgstr "Entidades autorizadas a transferir un recurso"
 
-#: ⁨standard input⁩:387
+#: ⁨standard input⁩:386
 msgid "Entries to show:"
 msgstr ""
 
-#: ⁨standard input⁩:143
+#: ⁨standard input⁩:144
 msgid "Export"
 msgstr ""
 
@@ -1369,7 +1369,7 @@ msgstr "Cartografía de campo"
 msgid "File not found"
 msgstr "Archivo no encontrado"
 
-#: ⁨standard input⁩:137
+#: ⁨standard input⁩:138
 msgid "Filter"
 msgstr ""
 
@@ -2013,7 +2013,7 @@ msgctxt "button"
 msgid "Next step"
 msgstr "Siguiente paso"
 
-#: ⁨standard input⁩:204 ⁨standard input⁩:344 ⁨standard input⁩:199
+#: ⁨standard input⁩:205 ⁨standard input⁩:343 ⁨standard input⁩:199
 msgid "No"
 msgstr ""
 
@@ -2055,7 +2055,7 @@ msgstr "No hay importaciones configuradas"
 msgid "No query could be suggested for this difference."
 msgstr ""
 
-#: ⁨standard input⁩:34 ⁨standard input⁩:64 ⁨standard input⁩:360 ⁨standard input⁩:58
+#: ⁨standard input⁩:34 ⁨standard input⁩:64 ⁨standard input⁩:359 ⁨standard input⁩:58
 #: ⁨standard input⁩:72 ⁨standard input⁩:31 ⁨standard input⁩:33
 msgid "No results found"
 msgstr ""
@@ -2669,7 +2669,7 @@ msgstr "Gestión del cumplimiento de la seguridad"
 msgid "See variable available"
 msgstr ""
 
-#: ⁨standard input⁩:238
+#: ⁨standard input⁩:239
 msgid "Select item"
 msgstr ""
 
@@ -3262,7 +3262,7 @@ msgstr ""
 msgid "Used for planning"
 msgstr "Se utiliza para planificar"
 
-#: ⁨standard input⁩:38
+#: ⁨standard input⁩:39
 msgid "User"
 msgstr ""
 
@@ -3345,7 +3345,7 @@ msgstr[2] ""
 msgid "Writer"
 msgstr ""
 
-#: ⁨standard input⁩:201 ⁨standard input⁩:342 ⁨standard input⁩:196
+#: ⁨standard input⁩:202 ⁨standard input⁩:341 ⁨standard input⁩:196
 msgid "Yes"
 msgstr ""
 
