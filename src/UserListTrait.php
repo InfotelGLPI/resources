@@ -44,18 +44,8 @@ trait UserListTrait
 {
     use NoStandardMassiveActionTrait;
 
-    // The rows are users: keep out of any output what User keeps out of it (its own list
-    // cannot be referenced in a declaration), plus the password reset token User only shows
-    // to whoever may update the account.
-    public static array $undisclosedFields = [
-        'password',
-        'password_history',
-        'personal_token',
-        'api_token',
-        '2fa',
-        'password_forget_token',
-        'password_forget_token_date',
-    ];
+    // Each class declares its own $undisclosedFields: a trait property with another default
+    // value than the one CommonDBTM declares is a fatal error before PHP 8.5.
 
     /**
      * Columns of glpi_users the list displays: the only ones it may disclose.

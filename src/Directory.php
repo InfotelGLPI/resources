@@ -44,6 +44,19 @@ class Directory extends CommonDBTM
 {
     use UserListTrait;
 
+    // The rows are users: keep out of any output what User keeps out of it (its own list
+    // cannot be referenced in a declaration), plus the password reset token User only shows
+    // to whoever may update the account. Not in UserListTrait, see there.
+    public static array $undisclosedFields = [
+        'password',
+        'password_history',
+        'personal_token',
+        'api_token',
+        '2fa',
+        'password_forget_token',
+        'password_forget_token_date',
+    ];
+
     // The directory has its own line in the profile form: plugin_resources only governs the
     // resources themselves, so it used to leave that line without effect.
     public static string $rightname = 'plugin_resources_annuary';
