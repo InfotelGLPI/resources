@@ -2,27 +2,29 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Kevin HAINRY <kevin.hainry@infotel.com>, 2022
 # Alban Lesellier <alban.lesellier@infotel.com>, 2023
 # EVRARD, 2026
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-27 10:19+0000\n"
+"POT-Creation-Date: 2026-11-27 11:47+0000\n"
 "PO-Revision-Date: 2020-11-02 16:16+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12371/fr_FR/)\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/"
+"12371/fr_FR/)\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
+"1000000 == 0 ? 1 : 2;\n"
 
 #: src/Resource_Change.php:344
 msgid " Change information"
@@ -53,8 +55,7 @@ msgid "%1$s: %2$s"
 msgstr "%1$s: %2$s"
 
 #: src/Config.php:269
-msgid ""
-"(If all four fields are enabled, the client is compliant with security)"
+msgid "(If all four fields are enabled, the client is compliant with security)"
 msgstr ""
 "(Si les quatre champs sont activés, le client est conforme à la sécurité) "
 
@@ -94,8 +95,7 @@ msgstr "Un système de notification existe déjà pour cette ressource"
 msgid "A resource has been added by"
 msgstr "Ajout d'une ressource"
 
-#: src/NotificationTargetResource.php:82
-#: src/NotificationTargetResource.php:672
+#: src/NotificationTargetResource.php:82 src/NotificationTargetResource.php:672
 msgid "A resource has been declared leaving"
 msgstr "Une ressource a été déclarée partante"
 
@@ -151,13 +151,11 @@ msgstr "Autorisation sur les actions"
 msgid "Actions to be taken"
 msgstr "Action à réaliser"
 
-#: src/NotificationTargetResource.php:81
-#: src/NotificationTargetResource.php:568
+#: src/NotificationTargetResource.php:81 src/NotificationTargetResource.php:568
 msgid "Actions to do on these leaving resources"
 msgstr "Des actions sont à effectuer sur ces ressources partantes"
 
-#: src/NotificationTargetResource.php:80
-#: src/NotificationTargetResource.php:561
+#: src/NotificationTargetResource.php:80 src/NotificationTargetResource.php:561
 msgid "Actions to do on these new resources"
 msgstr "Des actions sont à effectuer sur ces nouvelles ressources"
 
@@ -169,11 +167,11 @@ msgstr "Actif"
 msgid "Active Directory synchronization"
 msgstr "Synchronisation de l'AD"
 
-#: ⁨standard input⁩:58 ⁨standard input⁩:78 ⁨standard input⁩:46 ⁨standard
-#: input⁩:116 ⁨standard input⁩:57 ⁨standard input⁩:63 ⁨standard input⁩:47
-#: ⁨standard input⁩:91 ⁨standard input⁩:75 ⁨standard input⁩:82 ⁨standard
-#: input⁩:54 ⁨standard input⁩:69 ⁨standard input⁩:68 ⁨standard input⁩:39
-#: ⁨standard input⁩:71 ⁨standard input⁩:105 ⁨standard input⁩:48
+#: ⁨standard input⁩:58 ⁨standard input⁩:78 ⁨standard input⁩:46 ⁨standard input⁩:116
+#: ⁨standard input⁩:57 ⁨standard input⁩:63 ⁨standard input⁩:47 ⁨standard input⁩:91
+#: ⁨standard input⁩:75 ⁨standard input⁩:82 ⁨standard input⁩:54 ⁨standard input⁩:69
+#: ⁨standard input⁩:68 ⁨standard input⁩:39 ⁨standard input⁩:71 ⁨standard input⁩:105
+#: ⁨standard input⁩:48
 msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
@@ -316,7 +314,7 @@ msgstr "Etes-vous sûr ?"
 msgid "Arrival / Departure workflow"
 msgstr "Workflow Arrivées / Départs"
 
-#: src/Directory.php:219 src/Dashboard.php:137 src/Resource.php:477
+#: src/Directory.php:232 src/Dashboard.php:137 src/Resource.php:477
 #: src/Resource.php:994 src/Checklist.php:1331
 #: src/RuleContracttypeHidden.php:280 src/RuleContracttypeReadonly.php:321
 #: src/NotificationTargetResource.php:469
@@ -327,14 +325,14 @@ msgstr "Workflow Arrivées / Départs"
 #: src/NotificationTargetResource.php:1659
 #: src/NotificationTargetResource.php:1690 src/Resource_Item.php:877
 #: src/Resource_Item.php:1162 src/Resource_Item.php:1172
-#: src/ResourcePDF.php:109 src/Recap.php:214 src/Config.php:117
+#: src/ResourcePDF.php:109 src/Recap.php:227 src/Config.php:117
 #: src/Config.php:496 src/RuleContracttype.php:277
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:305
 #: report/resourcewithoutuser/resourcewithoutuser.php:85
 #: report/resourceleavingwithactiveemployment/resourceleavingwithactiveemployment.php:91
 #: report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php:299
-#: report/resourcewithoutemployment/resourcewithoutemployment.php:91 ⁨standard
-#: input⁩:264 ⁨standard input⁩:57 ⁨standard input⁩:637
+#: report/resourcewithoutemployment/resourcewithoutemployment.php:91
+#: ⁨standard input⁩:264 ⁨standard input⁩:57 ⁨standard input⁩:637
 msgid "Arrival date"
 msgstr "Date d'arrivée"
 
@@ -460,8 +458,7 @@ msgstr "Restitution de badge"
 msgid "Be careful, new resources will be created in the entity"
 msgstr "Attention, les ressources seront créées dans l'entité"
 
-#: ⁨standard input⁩:58 ⁨standard input⁩:60 ⁨standard input⁩:71 ⁨standard
-#: input⁩:75
+#: ⁨standard input⁩:58 ⁨standard input⁩:60 ⁨standard input⁩:71 ⁨standard input⁩:75
 msgid "Begin date"
 msgstr "Date de début"
 
@@ -533,8 +530,8 @@ msgctxt "button"
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ⁨standard input⁩:58 ⁨standard input⁩:77 ⁨standard input⁩:92 ⁨standard
-#: input⁩:118 ⁨standard input⁩:121 ⁨standard input⁩:130
+#: ⁨standard input⁩:58 ⁨standard input⁩:77 ⁨standard input⁩:92 ⁨standard input⁩:118
+#: ⁨standard input⁩:121 ⁨standard input⁩:130
 msgctxt "button"
 msgid "Cancel the request"
 msgstr "Annuler la demande"
@@ -721,7 +718,7 @@ msgstr "Choisir"
 msgid "Choosing the intercontrat"
 msgstr "Choisir l'intercontrat"
 
-#: src/Directory.php:376 src/Resource.php:5240
+#: src/Directory.php:389 src/Resource.php:5240
 msgid "Click here to send your email"
 msgstr "Cliquez ici pour envoyer votre courriel"
 
@@ -763,8 +760,8 @@ msgstr[0] "Commentaire"
 msgstr[1] "Commentaires"
 msgstr[2] "Commentaires"
 
-#: ⁨standard input⁩:72 ⁨standard input⁩:41 ⁨standard input⁩:34 ⁨standard
-#: input⁩:75 ⁨standard input⁩:88 ⁨standard input⁩:62
+#: ⁨standard input⁩:72 ⁨standard input⁩:41 ⁨standard input⁩:34 ⁨standard input⁩:75
+#: ⁨standard input⁩:88 ⁨standard input⁩:62
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -832,8 +829,8 @@ msgstr "Autorisation sur les types de contrat "
 msgid "ContractType"
 msgstr "Type de Contrat"
 
-#: src/Resource_Change.php:1653 src/Checklist.php:424
-#: src/ResourceBadge.php:514 ⁨standard input⁩:97
+#: src/Resource_Change.php:1653 src/Checklist.php:424 src/ResourceBadge.php:514
+#: ⁨standard input⁩:97
 msgid "Create a end treatment ticket"
 msgstr "Créer un ticket de fin de traitement"
 
@@ -940,8 +937,8 @@ msgid "Date"
 msgstr "Date"
 
 #: src/Resource.php:1352 src/RuleContracttypeHidden.php:362
-#: src/RuleContracttypeReadonly.php:404 src/RuleContracttype.php:324 ⁨standard
-#: input⁩:57
+#: src/RuleContracttypeReadonly.php:404 src/RuleContracttype.php:324
+#: ⁨standard input⁩:57
 msgid "Date agreement candidate"
 msgstr "Date d'accord du candidat"
 
@@ -982,8 +979,7 @@ msgstr "Déclaration de la mutation de la ressource effectuée"
 msgid "Declare a change"
 msgstr "Déclarer un changement"
 
-#: src/Resource.php:3784 src/Menu.php:184 ⁨standard input⁩:307 ⁨standard
-#: input⁩:61
+#: src/Resource.php:3784 src/Menu.php:184 ⁨standard input⁩:307 ⁨standard input⁩:61
 msgid "Declare a departure"
 msgstr "Déclarer un départ"
 
@@ -1062,9 +1058,9 @@ msgstr[2] "Groupes de diplômes"
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: ⁨standard input⁩:380 ⁨standard input⁩:47 ⁨standard input⁩:83 ⁨standard
-#: input⁩:74 ⁨standard input⁩:71 ⁨standard input⁩:72 ⁨standard input⁩:93
-#: ⁨standard input⁩:52 ⁨standard input⁩:53 ⁨standard input⁩:73
+#: ⁨standard input⁩:380 ⁨standard input⁩:47 ⁨standard input⁩:83 ⁨standard input⁩:74
+#: ⁨standard input⁩:71 ⁨standard input⁩:72 ⁨standard input⁩:93 ⁨standard input⁩:52
+#: ⁨standard input⁩:53 ⁨standard input⁩:73
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
@@ -1085,7 +1081,7 @@ msgstr[0] "Département"
 msgstr[1] "Départements"
 msgstr[2] "Départements"
 
-#: src/Adconfig.php:297 src/Directory.php:227 src/Dashboard.php:190
+#: src/Adconfig.php:297 src/Directory.php:240 src/Dashboard.php:190
 #: src/LinkAd.php:706 src/Resource_Change.php:595 src/Resource.php:478
 #: src/Resource.php:1001 src/Checklist.php:1330
 #: src/RuleContracttypeHidden.php:284 src/RuleContracttypeReadonly.php:325
@@ -1097,7 +1093,7 @@ msgstr[2] "Départements"
 #: src/NotificationTargetResource.php:1660
 #: src/NotificationTargetResource.php:1691 src/Resource_Item.php:878
 #: src/Resource_Item.php:1163 src/Resource_Item.php:1173
-#: src/ResourcePDF.php:110 src/Recap.php:222 src/Config.php:118
+#: src/ResourcePDF.php:110 src/Recap.php:235 src/Config.php:118
 #: src/RuleContracttype.php:281
 #: report/resourceemploymentwithlapseprofession/resourceemploymentwithlapseprofession.php:306
 #: report/resourcewithoutuser/resourcewithoutuser.php:90
@@ -1108,8 +1104,8 @@ msgstr[2] "Départements"
 #: report/resourcewithoutemployment/resourcewithoutemployment.php:96
 #: report/checkhabilitation/checkhabilitation.php:240
 #: report/checkmissingN0group/checkmissingN0group.php:229 ⁨standard input⁩:324
-#: ⁨standard input⁩:329 ⁨standard input⁩:37 ⁨standard input⁩:651 ⁨standard
-#: input⁩:42 ⁨standard input⁩:51
+#: ⁨standard input⁩:329 ⁨standard input⁩:37 ⁨standard input⁩:651 ⁨standard input⁩:42
+#: ⁨standard input⁩:51
 msgid "Departure date"
 msgstr "Date de départ"
 
@@ -1121,8 +1117,8 @@ msgstr "Départ de"
 msgid "Descending"
 msgstr "Descendant"
 
-#: src/Config.php:119 ⁨standard input⁩:348 ⁨standard input⁩:42 ⁨standard
-#: input⁩:45 ⁨standard input⁩:35 ⁨standard input⁩:40 ⁨standard input⁩:708
+#: src/Config.php:119 ⁨standard input⁩:348 ⁨standard input⁩:42 ⁨standard input⁩:45
+#: ⁨standard input⁩:35 ⁨standard input⁩:40 ⁨standard input⁩:708
 msgid "Description"
 msgstr "Description"
 
@@ -1185,8 +1181,7 @@ msgstr ""
 
 #: src/Config.php:261
 msgid "Display of two additional security fields on a resource"
-msgstr ""
-"Affichage de deux champs de sécurité supplémentaires sur une ressource"
+msgstr "Affichage de deux champs de sécurité supplémentaires sur une ressource"
 
 #: src/Config.php:259
 msgid "Displaying the security block on the resource"
@@ -1238,8 +1233,8 @@ msgid "Effective duration"
 msgstr "Durée effective"
 
 #: src/LeavingInformation.php:473 src/RuleContracttypeHidden.php:406
-#: src/RuleContracttypeReadonly.php:444 src/RuleContracttype.php:368 ⁨standard
-#: input⁩:158
+#: src/RuleContracttypeReadonly.php:444 src/RuleContracttype.php:368
+#: ⁨standard input⁩:158
 msgid "Effective leaving date"
 msgstr "Date de sortie effective"
 
@@ -1315,8 +1310,8 @@ msgstr "Gestion des emplois / budgets"
 msgid "Empty for non defined"
 msgstr "Vide si non défini"
 
-#: ⁨standard input⁩:60 ⁨standard input⁩:62 ⁨standard input⁩:42 ⁨standard
-#: input⁩:73 ⁨standard input⁩:77 ⁨standard input⁩:33
+#: ⁨standard input⁩:60 ⁨standard input⁩:62 ⁨standard input⁩:42 ⁨standard input⁩:73
+#: ⁨standard input⁩:77 ⁨standard input⁩:33
 msgid "End date"
 msgstr "Date de fin"
 
@@ -1515,7 +1510,8 @@ msgstr "Masquer le premier formulaire lorsque vous n'avez qu'un seul gabarit"
 
 #: src/Config.php:429
 msgid "Hide the following fields in the \"Report an Arrival\" form"
-msgstr "Masquer ces champs uniquement dans le formulaire \"Déclarer une arrivée\""
+msgstr ""
+"Masquer ces champs uniquement dans le formulaire \"Déclarer une arrivée\""
 
 #: src/Config.php:473
 msgid "Hide/Show elements"
@@ -1536,8 +1532,8 @@ msgstr[1] "Ressources humaines"
 msgstr[2] "Ressources humaines"
 
 #: src/Employment.php:204 src/Employment.php:264 src/Resource.php:162
-#: src/TaskPlanning.php:71 src/Menu.php:376 src/Profile.php:185 ⁨standard
-#: input⁩:84
+#: src/TaskPlanning.php:71 src/Menu.php:376 src/Profile.php:185
+#: ⁨standard input⁩:84
 msgid "Human resource"
 msgid_plural "Human resources"
 msgstr[0] "Ressource humaine"
@@ -1566,8 +1562,7 @@ msgstr "Si un autre contrat est disponible ne pas afficher le \"Sans contrat\""
 
 #: src/Metademand.php:145
 msgid ""
-"If the value selected equals the value to check, the checklist in will be "
-"add"
+"If the value selected equals the value to check, the checklist in will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, la checklist va "
 "être ajoutée"
@@ -1582,8 +1577,7 @@ msgstr ""
 
 #: src/Metademand.php:178
 msgid ""
-"If the value selected equals the value to check, the habilitation will be "
-"add"
+"If the value selected equals the value to check, the habilitation will be add"
 msgstr ""
 "Si la valeur sélectionnée est égale à la valeur à vérifier, l'habilitation "
 "va être ajoutée"
@@ -1789,7 +1783,7 @@ msgstr "Lien avec le plugin métademandes"
 msgid "Linked task"
 msgstr "Tâche Liée"
 
-#: src/Recap.php:70
+#: src/Recap.php:83
 msgid "List Employment / Resource"
 msgid_plural "List Employments / Resources"
 msgstr[0] "Liste Emploi / Ressource"
@@ -1812,13 +1806,12 @@ msgstr "Liste des badges"
 msgid "List of forced holidays"
 msgstr "Liste des congés employeurs"
 
-#: src/Menu.php:430 src/ResourceResting.php:310 ⁨standard input⁩:44 ⁨standard
-#: input⁩:42
+#: src/Menu.php:430 src/ResourceResting.php:310 ⁨standard input⁩:44
+#: ⁨standard input⁩:42
 msgid "List of non contract periods"
 msgstr "Liste des intercontrats"
 
-#: src/NotificationTargetResource.php:78
-#: src/NotificationTargetResource.php:400
+#: src/NotificationTargetResource.php:78 src/NotificationTargetResource.php:400
 #: src/NotificationTargetResource.php:1648
 msgid "List of not finished tasks"
 msgstr "Tâches révolues"
@@ -1939,9 +1932,8 @@ msgid "Modify user in AD"
 msgstr "Modifier l'utilisateur dans l'annuaire"
 
 #: src/Resource_Change.php:580 src/Resource_Change.php:608 ⁨standard input⁩:36
-#: ⁨standard input⁩:35 ⁨standard input⁩:153 ⁨standard input⁩:64 ⁨standard
-#: input⁩:38 ⁨standard input⁩:32 ⁨standard input⁩:44 ⁨standard input⁩:37
-#: ⁨standard input⁩:61
+#: ⁨standard input⁩:35 ⁨standard input⁩:153 ⁨standard input⁩:64 ⁨standard input⁩:38
+#: ⁨standard input⁩:32 ⁨standard input⁩:44 ⁨standard input⁩:37 ⁨standard input⁩:61
 msgid "Name"
 msgstr "Nom"
 
@@ -2027,9 +2019,8 @@ msgstr "Nouveau responsable commercial de la ressource"
 msgid "New type of contract"
 msgstr "Nouveau type de contrat"
 
-#: ⁨standard input⁩:71 ⁨standard input⁩:89 ⁨standard input⁩:759 ⁨standard
-#: input⁩:104 ⁨standard input⁩:130 ⁨standard input⁩:133 ⁨standard input⁩:142
-#: ⁨standard input⁩:64
+#: ⁨standard input⁩:71 ⁨standard input⁩:89 ⁨standard input⁩:759 ⁨standard input⁩:104
+#: ⁨standard input⁩:130 ⁨standard input⁩:133 ⁨standard input⁩:142 ⁨standard input⁩:64
 msgctxt "button"
 msgid "Next"
 msgstr "Suivant"
@@ -2071,8 +2062,8 @@ msgstr "Pas de fichier à comparer"
 #: ⁨standard input⁩:76
 msgid "No habilitation level, you cannot add habilitation for this resource."
 msgstr ""
-"Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour"
-" cette ressource."
+"Pas de niveau d'habilitation, vous ne pouvez pas ajouter d'habilitation pour "
+"cette ressource."
 
 #: src/ImportResource.php:1249
 msgid "No imports configured"
@@ -2082,8 +2073,8 @@ msgstr "Aucun import configuré"
 msgid "No query could be suggested for this difference."
 msgstr "Aucune explication ne peut être fournie pour cette différence."
 
-#: ⁨standard input⁩:33 ⁨standard input⁩:64 ⁨standard input⁩:359 ⁨standard
-#: input⁩:72 ⁨standard input⁩:58 ⁨standard input⁩:31 ⁨standard input⁩:34
+#: ⁨standard input⁩:33 ⁨standard input⁩:64 ⁨standard input⁩:359 ⁨standard input⁩:72
+#: ⁨standard input⁩:58 ⁨standard input⁩:31 ⁨standard input⁩:34
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
 
@@ -2148,8 +2139,8 @@ msgid "Number of titles and values of tooltip doesn't match"
 msgstr "Le nombre de titres et de valeurs ne correspond pas"
 
 #: src/Resource.php:1377 src/RuleContracttypeHidden.php:374
-#: src/RuleContracttypeReadonly.php:416 src/RuleContracttype.php:336 ⁨standard
-#: input⁩:98
+#: src/RuleContracttypeReadonly.php:416 src/RuleContracttype.php:336
+#: ⁨standard input⁩:98
 msgid "Number of years experience"
 msgstr "Nombre d'années d'expérience"
 
@@ -2244,8 +2235,7 @@ msgstr "Merci d'activer le plugin métademandes"
 
 #: src/NotificationTargetResource.php:675
 msgid "Please check the leaving checklist of the resource"
-msgstr ""
-"Merci de vérifier la checklist de départ de la ressource si nécessaire"
+msgstr "Merci de vérifier la checklist de départ de la ressource si nécessaire"
 
 #: src/Resource.php:3854
 #, php-format
@@ -2270,8 +2260,8 @@ msgstr "Envoyer"
 msgid "Prefix"
 msgstr "Préfixe"
 
-#: ⁨standard input⁩:65 ⁨standard input⁩:83 ⁨standard input⁩:753 ⁨standard
-#: input⁩:98 ⁨standard input⁩:124 ⁨standard input⁩:127 ⁨standard input⁩:136
+#: ⁨standard input⁩:65 ⁨standard input⁩:83 ⁨standard input⁩:753 ⁨standard input⁩:98
+#: ⁨standard input⁩:124 ⁨standard input⁩:127 ⁨standard input⁩:136
 msgctxt "button"
 msgid "Previous"
 msgstr "Précédent"
@@ -2320,10 +2310,10 @@ msgstr "Requêtes à exécuter"
 #: src/NotificationTargetResource.php:836
 #: src/NotificationTargetResource.php:1007
 #: src/NotificationTargetResource.php:1651
-#: src/NotificationTargetResource.php:1682 src/Recap.php:142
-#: src/Config.php:120 src/Config.php:148 src/RuleContracttype.php:285
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:80 ⁨standard
-#: input⁩:110 ⁨standard input⁩:237
+#: src/NotificationTargetResource.php:1682 src/Recap.php:155 src/Config.php:120
+#: src/Config.php:148 src/RuleContracttype.php:285
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:80
+#: ⁨standard input⁩:110 ⁨standard input⁩:237
 msgid "Quota"
 msgstr "Quotité"
 
@@ -2332,18 +2322,17 @@ msgid "Random password (recommended)"
 msgstr "Mot de passe aléatoire (recommandé)"
 
 #: src/Employment.php:213 src/Budget.php:154 src/Cost.php:118 src/Cost.php:162
-#: src/ResourceSpeciality.php:70 src/ResourceSpeciality.php:154
-#: src/Rank.php:57 ⁨standard input⁩:135 ⁨standard input⁩:57 ⁨standard
-#: input⁩:58
+#: src/ResourceSpeciality.php:70 src/ResourceSpeciality.php:154 src/Rank.php:57
+#: ⁨standard input⁩:135 ⁨standard input⁩:57 ⁨standard input⁩:58
 msgid "Rank"
 msgid_plural "Ranks"
 msgstr[0] "Grade"
 msgstr[1] "Grades"
 msgstr[2] "Grades"
 
-#: src/Employment.php:257 src/Recap.php:238
-#: report/resourceemploymentdiff/resourceemploymentdiff.php:111 ⁨standard
-#: input⁩:72
+#: src/Employment.php:257 src/Recap.php:251
+#: report/resourceemploymentdiff/resourceemploymentdiff.php:111
+#: ⁨standard input⁩:72
 msgid "Ratio Employment / Budget"
 msgstr "Ratio Emploi / Budget"
 
@@ -2352,16 +2341,15 @@ msgid "Read only Fields"
 msgstr "Champs en lecture seule"
 
 #: src/Resource.php:1193 src/RuleContracttypeHidden.php:346
-#: src/RuleContracttypeReadonly.php:388
-#: src/NotificationTargetResource.php:1126
-#: src/NotificationTargetResource.php:1674 src/Config.php:126 ⁨standard
-#: input⁩:341 ⁨standard input⁩:687
+#: src/RuleContracttypeReadonly.php:388 src/NotificationTargetResource.php:1126
+#: src/NotificationTargetResource.php:1674 src/Config.php:126
+#: ⁨standard input⁩:341 ⁨standard input⁩:687
 msgid "Reading the security charter"
 msgstr "Lecture de la charte de sécurité"
 
 #: src/Resource.php:1385 src/RuleContracttypeHidden.php:378
-#: src/RuleContracttypeReadonly.php:420 src/RuleContracttype.php:340 ⁨standard
-#: input⁩:110
+#: src/RuleContracttypeReadonly.php:420 src/RuleContracttype.php:340
+#: ⁨standard input⁩:110
 msgid "Reconversion"
 msgstr "Reconversion"
 
@@ -2544,7 +2532,7 @@ msgstr "Création de ressources"
 msgid "Resource files imports"
 msgstr "Import de fichier Resources"
 
-#: hook.php:1528 src/Directory.php:210 src/Resource.php:475
+#: hook.php:1528 src/Directory.php:223 src/Resource.php:475
 #: src/Resource.php:981 src/Resource.php:3342 src/Task.php:949
 #: src/Task.php:1340 src/RuleContracttypeHidden.php:268
 #: src/RuleContracttypeReadonly.php:187 src/RuleContracttypeReadonly.php:228
@@ -2558,8 +2546,8 @@ msgstr "Import de fichier Resources"
 #: src/NotificationTargetResource.php:1656
 #: src/NotificationTargetResource.php:1687 src/ResourcePDF.php:101
 #: src/Config.php:111 src/Config.php:483 src/RuleContracttype.php:265
-#: ⁨standard input⁩:230 ⁨standard input⁩:235 ⁨standard input⁩:42 ⁨standard
-#: input⁩:343 ⁨standard input⁩:353 ⁨standard input⁩:368 ⁨standard input⁩:52
+#: ⁨standard input⁩:230 ⁨standard input⁩:235 ⁨standard input⁩:42 ⁨standard input⁩:343
+#: ⁨standard input⁩:353 ⁨standard input⁩:368 ⁨standard input⁩:52
 msgid "Resource manager"
 msgstr "Encadrant direct de la ressource"
 
@@ -2602,7 +2590,7 @@ msgstr "Volume ressource (€)"
 msgid "Resources data"
 msgstr "Données de ressources"
 
-#: src/Directory.php:74
+#: src/Directory.php:87
 msgid "Resources directory"
 msgstr "Annuaire des ressources"
 
@@ -2644,8 +2632,8 @@ msgstr[2] "Postes"
 #: src/NotificationTargetResource.php:846
 #: src/NotificationTargetResource.php:1013 src/Config.php:112
 #: src/Config.php:482 src/RuleContracttype.php:269 ⁨standard input⁩:247
-#: ⁨standard input⁩:253 ⁨standard input⁩:77 ⁨standard input⁩:91 ⁨standard
-#: input⁩:388 ⁨standard input⁩:398 ⁨standard input⁩:413
+#: ⁨standard input⁩:253 ⁨standard input⁩:77 ⁨standard input⁩:91 ⁨standard input⁩:388
+#: ⁨standard input⁩:398 ⁨standard input⁩:413
 msgid "Sales manager"
 msgstr "Responsable commercial"
 
@@ -2659,8 +2647,8 @@ msgstr ""
 "Sélection des responsables commerciaux de la ressource : Uniquement ces "
 "utilisateurs ayant ce profil"
 
-#: ⁨standard input⁩:50 ⁨standard input⁩:32 ⁨standard input⁩:64 ⁨standard
-#: input⁩:35 ⁨standard input⁩:38 ⁨standard input⁩:31 ⁨standard input⁩:48
+#: ⁨standard input⁩:50 ⁨standard input⁩:32 ⁨standard input⁩:64 ⁨standard input⁩:35
+#: ⁨standard input⁩:38 ⁨standard input⁩:31 ⁨standard input⁩:48
 msgctxt "button"
 msgid "Save"
 msgstr "Sauver"
@@ -2715,8 +2703,8 @@ msgstr "Sélectionner un objet"
 msgid "Select the contract type"
 msgstr "Sélectionnez le type de contrat souhaité"
 
-#: src/Directory.php:283 src/Resource.php:3969 ⁨standard input⁩:292 ⁨standard
-#: input⁩:726
+#: src/Directory.php:296 src/Resource.php:3969 ⁨standard input⁩:292
+#: ⁨standard input⁩:726
 msgid "Send a notification"
 msgstr "Envoyer une notification"
 
@@ -2756,8 +2744,8 @@ msgstr "Envoyer une notification de mutation de ressource"
 #: src/Resource.php:1201 src/Resource.php:1293
 #: src/RuleContracttypeHidden.php:342 src/RuleContracttypeReadonly.php:384
 #: src/NotificationTargetResource.php:1121
-#: src/NotificationTargetResource.php:1673 src/Config.php:125 ⁨standard
-#: input⁩:336 ⁨standard input⁩:673
+#: src/NotificationTargetResource.php:1673 src/Config.php:125
+#: ⁨standard input⁩:336 ⁨standard input⁩:673
 msgid "Sensitized to security"
 msgstr "Sensibilisé à la sécurité"
 
@@ -2954,12 +2942,12 @@ msgstr ""
 
 #: ⁨standard input⁩:107
 msgid ""
-"Thank you for paying attention to the spelling of the name and the firstname"
-" of the resource. For compound firstnames, separate them with a dash \"-\"."
+"Thank you for paying attention to the spelling of the name and the firstname "
+"of the resource. For compound firstnames, separate them with a dash \"-\"."
 msgstr ""
 "Merci de faire attention a l'orthographe du nom et du prénom de la "
-"ressource. Pour les prénoms composés, veuillez les séparer par un tiret "
-"\"-\"."
+"ressource. Pour les prénoms composés, veuillez les séparer par un tiret \"-"
+"\"."
 
 #: src/NotificationTargetResource.php:822
 msgid "Thanks to recover his badges"
@@ -2969,8 +2957,8 @@ msgstr "Cette ressource possède des badges. Merci de les récuperer"
 msgid ""
 "The action, the entity or the category of this change action is not valid"
 msgstr ""
-"L'action, l'entité ou la catégorie de cette action de modification n'est pas"
-" valide"
+"L'action, l'entité ou la catégorie de cette action de modification n'est pas "
+"valide"
 
 #: src/Resource_Change.php:1370
 #, php-format
@@ -3038,10 +3026,10 @@ msgid ""
 "expected schema: data will be lost. Check that they are not used by another "
 "plugin or by a custom development before running them."
 msgstr ""
-"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas"
-" partie du schéma attendu : des données seront perdues. Avant de les "
-"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par"
-" un développement personnalisé."
+"Les requêtes suivantes suppriment des colonnes ou des tables qui ne font pas "
+"partie du schéma attendu : des données seront perdues. Avant de les "
+"exécuter, vérifiez qu’elles ne sont pas utilisées par un autre plugin ou par "
+"un développement personnalisé."
 
 #: src/Checklist.php:551
 msgid "The link must be an http or https URL"
@@ -3070,8 +3058,8 @@ msgid ""
 msgstr ""
 "Les requêtes ci-dessous ne sont que des suggestions basées sur les "
 "différences constatées. Veuillez les examiner, sauvegarder votre base de "
-"données, puis les exécuter manuellement : elles ne sont jamais exécutées par"
-" l’extension."
+"données, puis les exécuter manuellement : elles ne sont jamais exécutées par "
+"l’extension."
 
 #: src/Employee.php:583
 msgid "The resource is also created if not existent"
@@ -3113,8 +3101,7 @@ msgstr "Ces ressources ont normalement quitté l'entreprise"
 
 #: src/Employment.php:546
 msgid ""
-"These resources left the company, linked current employment have been "
-"updated"
+"These resources left the company, linked current employment have been updated"
 msgstr ""
 "Ces ressources ont quitté l'entreprise, les emplois liés sont mis à jour"
 
@@ -3251,8 +3238,8 @@ msgstr "Nombre illimité d'habilitations sélectionnables"
 msgid "Unsupported item type"
 msgstr "Type d'objet non pris en charge"
 
-#: ⁨standard input⁩:86 ⁨standard input⁩:62 ⁨standard input⁩:88 ⁨standard
-#: input⁩:132 ⁨standard input⁩:59 ⁨standard input⁩:76 ⁨standard input⁩:44
+#: ⁨standard input⁩:86 ⁨standard input⁩:62 ⁨standard input⁩:88 ⁨standard input⁩:132
+#: ⁨standard input⁩:59 ⁨standard input⁩:76 ⁨standard input⁩:44
 msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
