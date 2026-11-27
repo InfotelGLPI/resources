@@ -221,7 +221,7 @@
                         'entity': item.fields['entities_id'],
                         'condition': condition_emp,
                         'required': mandatory.plugin_resources_employers_id is defined,
-                        'readonly': readonly.plugin_resources_employers_id is defined,
+                        'readonly': readonly.plugin_resources_employers_id is defined or employer_readonly,
                     }) }}
             {% endif %}
 
@@ -374,7 +374,8 @@
                     'helper': max_upload_size,
                 }) }}
 
-                {% if picture_url %}
+                {# A frozen form refuses the deletion server-side as well #}
+                {% if picture_url and not no_form_buttons %}
                     <button type="submit" name="delete_picture" value="1" class="btn btn-sm btn-outline-danger mt-2">
                         <i class="ti ti-circle-x me-1"></i>{{ _x('button', 'Delete permanently') }}
                     </button>

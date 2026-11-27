@@ -227,21 +227,23 @@ if ($report->criteriasValidated()) {
 
         echo ReportExport::showNewLine($output_type);
 
-        showTitle($output_type, $num, ProfessionCategory::getTypeName(1), 'professioncategory', true);
-        showTitle($output_type, $num, ProfessionLine::getTypeName(1), 'professionline', true);
-        showTitle($output_type, $num, Profession::getTypeName(1), 'profession', true);
-        showTitle($output_type, $num, Rank::getTypeName(1), 'rank', true);
-        showTitle($output_type, $num, __('Begin date'), 'begin_date', true);
-        showTitle($output_type, $num, __('End date'), 'end_date', true);
-        showTitle($output_type, $num, BudgetType::getTypeName(1), 'budget_type', true);
-        showTitle($output_type, $num, __('Budget volume(qty)', 'resources'), 'qt_vol_budg_vot', true);
-        showTitle($output_type, $num, __('Employment volume (qty)', 'resources'), 'qt_vol_budg_use');
-        showTitle($output_type, $num, __('Resource volume (qty)', 'resources'), 'qt_vol_real');
-        showTitle($output_type, $num, __('Remaining budget - employment (qty)', 'resources'), 'solde_qt');
-        showTitle($output_type, $num, __('Budget volume (€)', 'resources'), 'vol_budg_vot');
-        showTitle($output_type, $num, __('Employment volume (€)', 'resources'), 'vol_budg_use');
-        showTitle($output_type, $num, __('Resource volume (€)', 'resources'), 'vol_real');
-        showTitle($output_type, $num, __('Remaining budget - employment (€)', 'resources'), 'solde');
+        // Criteria of the report, carried over by the sort links of the column headers
+        $sort_criteria = $report->getRequestParameters();
+        showTitle($output_type, $num, $sort_criteria, ProfessionCategory::getTypeName(1), 'professioncategory', true);
+        showTitle($output_type, $num, $sort_criteria, ProfessionLine::getTypeName(1), 'professionline', true);
+        showTitle($output_type, $num, $sort_criteria, Profession::getTypeName(1), 'profession', true);
+        showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1), 'rank', true);
+        showTitle($output_type, $num, $sort_criteria, __('Begin date'), 'begin_date', true);
+        showTitle($output_type, $num, $sort_criteria, __('End date'), 'end_date', true);
+        showTitle($output_type, $num, $sort_criteria, BudgetType::getTypeName(1), 'budget_type', true);
+        showTitle($output_type, $num, $sort_criteria, __('Budget volume(qty)', 'resources'), 'qt_vol_budg_vot', true);
+        showTitle($output_type, $num, $sort_criteria, __('Employment volume (qty)', 'resources'), 'qt_vol_budg_use');
+        showTitle($output_type, $num, $sort_criteria, __('Resource volume (qty)', 'resources'), 'qt_vol_real');
+        showTitle($output_type, $num, $sort_criteria, __('Remaining budget - employment (qty)', 'resources'), 'solde_qt');
+        showTitle($output_type, $num, $sort_criteria, __('Budget volume (€)', 'resources'), 'vol_budg_vot');
+        showTitle($output_type, $num, $sort_criteria, __('Employment volume (€)', 'resources'), 'vol_budg_use');
+        showTitle($output_type, $num, $sort_criteria, __('Resource volume (€)', 'resources'), 'vol_real');
+        showTitle($output_type, $num, $sort_criteria, __('Remaining budget - employment (€)', 'resources'), 'solde');
 
         echo ReportExport::showEndLine($output_type);
 
@@ -252,6 +254,14 @@ if ($report->criteriasValidated()) {
         $totalamountemployment = 0;
         $totalamountresource = 0;
         $totalbudgetemployment = 0;
+
+        // The budgets listed are those of the active entities (query above): the employments,
+        // resources and costs they are compared with are taken from the same perimeter, or
+        // the volumes and amounts would add up rows of entities the session cannot see. Costs
+        // are a dropdown shared with the sub-entities, hence the recursion.
+        $employments_entities = $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_employments', '', '', false);
+        $resources_entities   = $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_resources', '', '', false);
+        $costs_entities       = $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_costs', '', '', true);
 
         //For each budget
         $row_num = 2;
@@ -329,6 +339,7 @@ if ($report->criteriasValidated()) {
                     ],
                     ['glpi_plugin_resources_employments.begin_date' => ['<=', $data['end_date']]],
                     'glpi_plugin_resources_employments.plugin_resources_professions_id' => $data['profession'],
+                    $employments_entities,
                 ],
             ];
             if ($data['rank'] != 0) {
@@ -369,7 +380,8 @@ if ($report->criteriasValidated()) {
                     Html::formatNumber($data1['sum'], '', 2) . "</a>";
             }
 
-            echo ReportExport::showItem($output_type, $ratio, $num, $row_num);
+            // Markup built above from ids, a validated date and a formatted number
+            echo ReportExport::showItem($output_type, $ratio, $num, $row_num, '', true);
             $totalvolemployment = $totalvolemployment + $data1['sum'];
             //recover quota sum of resource for each budget depending on rank, profession and year
             $criteriaResourceVolume = [
@@ -419,6 +431,7 @@ if ($report->criteriasValidated()) {
                     ],
                     ['glpi_plugin_resources_employments.begin_date' => ['<=', $data['end_date']]],
                     'glpi_plugin_resources_ranks.plugin_resources_professions_id' => $data['profession'],
+                    $resources_entities,
                 ],
             ];
             if ($data['rank'] != 0) {
@@ -452,7 +465,7 @@ if ($report->criteriasValidated()) {
                 $quota .= "' target='_blank'>" .
                     Html::formatNumber($data2['sum'], '', 4) . "</a>";
             }
-            echo ReportExport::showItem($output_type, $quota, $num, $row_num);
+            echo ReportExport::showItem($output_type, $quota, $num, $row_num, '', true);
             $totalvolresource = $totalvolresource + $data2['sum'];
 
             //difference between quantity of budget voting and sum of resource quota using it
@@ -474,6 +487,7 @@ if ($report->criteriasValidated()) {
                             ['end_date' => ['>=', $date]],
                         ],
                     ],
+                    $costs_entities,
                 ],
             ]);
             $data3 = $costIterator->current() ?? ['cost' => 0];
@@ -593,14 +607,15 @@ if ($output_type == Search::HTML_OUTPUT) {
 /**
  * Display the column title and allow the sort
  *
- * @param $output_type
- * @param $num
- * @param $title
- * @param $columnname
- * @param bool $sort
- * @return mixed
+ * @param int|string           $output_type
+ * @param int                  $num
+ * @param array<string, mixed> $criteria    parameters of the report criteria, kept by the sort link
+ * @param string               $title
+ * @param string               $columnname
+ * @param bool                 $sort
+ * @return void
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort = false)
+function showTitle($output_type, &$num, array $criteria, $title, $columnname, $sort = false)
 {
     if ($output_type != Search::HTML_OUTPUT || $sort == false) {
         echo ReportExport::showHeaderItem($output_type, $title, $num);
@@ -614,17 +629,9 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
             $order = 'DESC';
         }
     }
-    $link = PLUGIN_RESOURCES_WEBDIR . '/report/budgetsummary/budgetsummary.php';
-    $first = true;
-    foreach ($_REQUEST as $name => $value) {
-        if (!in_array($name, ['sort', 'order', 'PHPSESSID'])) {
-            $link .= ($first ? '?' : '&amp;');
-            $link .= $name . '=' . urlencode($value);
-            $first = false;
-        }
-    }
-    $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
-    $link .= '&amp;order=' . $order;
+    // Built from the report criteria only, never by replaying $_REQUEST: see
+    // ReportExport::getSortLink()
+    $link = ReportExport::getSortLink(PLUGIN_RESOURCES_WEBDIR . '/report/budgetsummary/budgetsummary.php', $criteria, $columnname, $order);
     echo ReportExport::showHeaderItem(
         $output_type,
         $title,

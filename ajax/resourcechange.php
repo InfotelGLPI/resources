@@ -40,11 +40,11 @@ if (isset($_POST['load_button_changeresources'])) {
     $resource_change->loadButtonChangeResources((int) ($_POST['action'] ?? 0), $_POST);
 } elseif (isset($_POST['action'])) {
     // The three fragments below belong to the "Managing change actions" setup screen, which
-    // Resource_Change::showFormActions() gates on canView() && canCreate(): the READ right
-    // posed at the top of this file is not enough for them. The test stands before the switch
-    // so no branch is left uncovered.
+    // front/resource_change.form.php gates on config UPDATE: the READ right posed at the top
+    // of this file is not enough for them. The test stands before the switch so no branch is
+    // left uncovered.
     if (in_array($_POST['action'], ['loadEntity', 'loadCategory', 'loadButtonAdd'], true)
-        && !(Resource_Change::canView() && Resource_Change::canCreate())) {
+        && !Session::haveRight(\Config::$rightname, UPDATE)) {
         throw new AccessDeniedHttpException();
     }
 

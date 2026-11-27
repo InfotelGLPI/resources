@@ -36,6 +36,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Migration;
 use Plugin;
@@ -85,17 +86,6 @@ class Employment extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -152,6 +142,36 @@ class Employment extends CommonDBTM
         return true;
     }
 
+    public function prepareInputForAdd($input)
+    {
+        // The rights checked on the employment (its own entity) say nothing about the
+        // resource it is attached to, which carries an entity of its own: attaching the
+        // employment changes that resource, so UPDATE is required on it.
+        if (array_key_exists('plugin_resources_resources_id', $input)
+            && !Resource::canAttachTo($input['plugin_resources_resources_id'])) {
+            Session::addMessageAfterRedirect(__("You don't have permission to perform this action."), false, ERROR);
+            return false;
+        }
+
+        return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // Same for a move: update() was handed the whole request, so any resource of the
+        // instance could receive the employment, whatever the entity.
+        if (array_key_exists('plugin_resources_resources_id', $input)
+            && !Resource::canAttachTo(
+                $input['plugin_resources_resources_id'],
+                (int) ($this->fields['plugin_resources_resources_id'] ?? 0),
+            )) {
+            Session::addMessageAfterRedirect(__("You don't have permission to perform this action."), false, ERROR);
+            return false;
+        }
+
+        return $input;
+    }
+
     /**
      * Actions done when an employment is deleted from the database
      *
@@ -174,6 +194,9 @@ class Employment extends CommonDBTM
             'datatype' => 'number',
             'massiveaction' => false,
         ];
+        // The id comes along with the name: plugin_resources_giveItem() checks that the viewer
+        // may read the resource before printing it. Both resource columns are restricted by
+        // the join (plugin_resources_getTaskResourceJoinRestriction()).
         $tab[] = [
             'id' => '3',
             'table' => 'glpi_plugin_resources_resources',
@@ -181,6 +204,7 @@ class Employment extends CommonDBTM
             'name' => __('Human resource', 'resources'),
             'massiveaction' => false,
             'datatype' => 'dropdown',
+            'additionalfields' => ['id'],
         ];
         $tab[] = [
             'id' => '4',
@@ -278,7 +302,17 @@ class Employment extends CommonDBTM
 
         $plugin_resources_resources_id = 0;
         if (isset($options['plugin_resources_resources_id'])) {
-            $plugin_resources_resources_id = $options['plugin_resources_resources_id'];
+            // Request value: it preselects the resource of the new employment, whose identity
+            // card the dropdown displays. Only a resource the session may read is kept.
+            try {
+                $plugin_resources_resources_id = Resource::getPostedId($options['plugin_resources_resources_id']);
+            } catch (BadRequestHttpException) {
+                $plugin_resources_resources_id = 0;
+            }
+            if ($plugin_resources_resources_id > 0
+                && !(new Resource())->can($plugin_resources_resources_id, READ)) {
+                $plugin_resources_resources_id = 0;
+            }
         }
 
         if ($ID > 0) {
@@ -489,7 +523,8 @@ class Employment extends CommonDBTM
 
                 $resource = new Resource();
                 $resource->getFromDB($data["id"]);
-                $resource->update([
+                // Scheduled leaving: it applies to validated resources as well
+                $resource->updateFromWorkflow([
                     'is_leaving' => 1,
                     'id' => $data["id"],
                     'date_declaration_departure' => date('Y-m-d H:i:s'),

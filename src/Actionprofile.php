@@ -43,6 +43,15 @@ use Migration;
 
 class Actionprofile extends CommonDBTM
 {
+    // Each row restricts the change actions of a profile (Resource_Change::getAllowedActions(),
+    // a missing or empty list standing for no restriction). front/actionprofile.form.php writes
+    // them under the core config right; with the plugin right they inherited, the generic entry
+    // points (API, forged massive actions) let a restricted user lift the restriction of their
+    // own profile, or change the one of any other profile.
+    use ConfigRightTrait;
+    // Written from the profile form only
+    use NoStandardMassiveActionTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $dohistory = true;
 

@@ -52,15 +52,11 @@ class LeavingReason extends CommonDropdown
         return _n('Leaving reason', 'Leaving reasons', $nb, 'resources');
     }
 
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
+    // Created under the core dropdown right, unlike its other operations: keep that right,
+    // with its CREATE bit only.
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
+        return Session::haveRight(\CommonDropdown::$rightname, CREATE);
     }
 
     /**

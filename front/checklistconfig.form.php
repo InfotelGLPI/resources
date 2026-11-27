@@ -39,8 +39,8 @@ if (!isset($_GET["id"])) {
 $checklistconfig = new Checklistconfig();
 
 if (isset($_POST["add"])) {
-    // CREATE, not UPDATE: canCreate() is widened here to
-    // haveRightsOr([CREATE, UPDATE, DELETE]), so no profile loses the form.
+    // CREATE: the profile form offers a Create box for checklists, and the plugin update
+    // grants it to the profiles that relied on canCreate() accepting UPDATE or DELETE.
     $checklistconfig->check(-1, CREATE, $_POST);
     $newID = $checklistconfig->add($_POST);
     Html::back();

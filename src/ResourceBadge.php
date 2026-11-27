@@ -35,6 +35,7 @@ use CommonITILActor;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Metademands\Metademand;
 use GlpiPlugin\Metademands\Metademand_Resource;
@@ -56,8 +57,15 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ResourceBadge extends CommonDBTM
 {
+    // The rows link a meta-demand to an entity for the badge requests: they are written from
+    // the setup page only. canView() is kept below.
+    use ConfigRightTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $dohistory = true;
+
+    /** Itemtype of the badges plugin, optional: only used once it is checked to be active */
+    private const BADGE_ITEMTYPE = Badge::class;
 
     /**
      * Return the localized name of the current Type
@@ -73,28 +81,15 @@ class ResourceBadge extends CommonDBTM
     }
 
     /**
-     * Have I the global right to "view" the Object
+     * Reading the links stays with the plugin right: they only name the meta-demand of each
+     * entity, which the badge menu opens to any HR user. Writing them is setup
+     * (ConfigRightTrait).
      *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
+     * @return bool
      **/
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
@@ -243,11 +238,16 @@ class ResourceBadge extends CommonDBTM
                     'label' => __('Request new badge', 'resources'),
                 ];
             }
-            $tiles[] = [
-                'url'   => './resourcebadge.form.php',
-                'icon'  => 'ti ti-circle-arrow-left',
-                'label' => __('Badge restitution', 'resources'),
-            ];
+            // The restitution needs to read the badge given back (canCreateRestitution()): the
+            // menu opened by the setup right alone does not offer it.
+            $badge = Plugin::isPluginActive('badges') ? getItemForItemtype(self::BADGE_ITEMTYPE) : null;
+            if ($badge instanceof CommonDBTM && $badge::canView()) {
+                $tiles[] = [
+                    'url'   => './resourcebadge.form.php',
+                    'icon'  => 'ti ti-circle-arrow-left',
+                    'label' => __('Badge restitution', 'resources'),
+                ];
+            }
         }
 
         TemplateRenderer::getInstance()->display('@resources/wizard_tiles_menu.html.twig', [
@@ -305,18 +305,7 @@ class ResourceBadge extends CommonDBTM
      */
     public function loadBadge($plugin_resources_resources_id)
     {
-        $dbu   = new DbUtils();
-        $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', [
-            "plugin_resources_resources_id" => $plugin_resources_resources_id,
-            "itemtype"                      => 'User',
-        ]);
-
-        $users_id = [];
-        foreach ($infos as $info) {
-            if ((int) $info['items_id'] > 0) {
-                $users_id[(int) $info['items_id']] = (int) $info['items_id'];
-            }
-        }
+        $users_id = self::getLinkedUserIds((int) $plugin_resources_resources_id);
 
         $badge_dropdown = '';
 
@@ -349,6 +338,68 @@ class ResourceBadge extends CommonDBTM
     }
 
     /**
+     * Users linked to a resource, the holders of the badges it may give back.
+     *
+     * @param int $resources_id
+     *
+     * @return array<int, int> user ids, indexed by themselves
+     */
+    public static function getLinkedUserIds(int $resources_id): array
+    {
+        $dbu   = new DbUtils();
+        $infos = $dbu->getAllDataFromTable('glpi_plugin_resources_resources_items', [
+            "plugin_resources_resources_id" => $resources_id,
+            "itemtype"                      => 'User',
+        ]);
+
+        $users_id = [];
+        foreach ($infos as $info) {
+            if ((int) $info['items_id'] > 0) {
+                $users_id[(int) $info['items_id']] = (int) $info['items_id'];
+            }
+        }
+
+        return $users_id;
+    }
+
+    /**
+     * Whether a badge restitution ticket may be created for a resource and a badge.
+     *
+     * The same conditions as the wizard offers them: UPDATE on the resource (the ticket and
+     * the history line are a change of it), the right to create tickets, and a badge the
+     * session may read that belongs to a user linked to the resource (the list loadBadge()
+     * offers). Both ids are posted.
+     *
+     * @param mixed $resources_id
+     * @param mixed $badges_id
+     *
+     * @return bool
+     */
+    public static function canCreateRestitution(mixed $resources_id, mixed $badges_id): bool
+    {
+        try {
+            $resources_id = Resource::getPostedId($resources_id);
+            $badges_id    = Resource::getPostedId($badges_id);
+        } catch (BadRequestHttpException) {
+            return false;
+        }
+
+        if ($resources_id <= 0
+            || $badges_id <= 0
+            || !Plugin::isPluginActive('badges')
+            || !Ticket::canCreate()
+            || !(new Resource())->can($resources_id, UPDATE)) {
+            return false;
+        }
+
+        $badge = getItemForItemtype(self::BADGE_ITEMTYPE);
+
+        return $badge instanceof CommonDBTM
+            && $badge->can($badges_id, READ)
+            && in_array((int) ($badge->fields['users_id'] ?? 0), self::getLinkedUserIds($resources_id), true);
+    }
+
+    /**
      * Button display
      */
     public function loadBadgeRestitution()
@@ -365,6 +416,19 @@ class ResourceBadge extends CommonDBTM
      */
     public static function createTicket($plugin_resources_resources_id, $options = [])
     {
+        // Both ids are posted: the resource and the badge are checked here, for every caller,
+        // before the badge name is resolved and anything is written.
+        if (!self::canCreateRestitution($plugin_resources_resources_id, $options['badges_id'] ?? null)) {
+            Session::addMessageAfterRedirect(
+                __("You don't have permission to perform this action."),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        $plugin_resources_resources_id = (int) $plugin_resources_resources_id;
+        $options['badges_id']          = (int) $options['badges_id'];
+
         $resource = new Resource();
         $resource->getFromDB($plugin_resources_resources_id);
 
@@ -420,7 +484,7 @@ class ResourceBadge extends CommonDBTM
         $input['_users_id_requester'] = Session::getLoginUserID();
         $input["items_id"] = [
             Resource::class => [$plugin_resources_resources_id],
-            Badge::class => [$options['badges_id']],
+            self::BADGE_ITEMTYPE => [$options['badges_id']],
         ];
 
         // Compute time_to_resolve if predefined based on create date

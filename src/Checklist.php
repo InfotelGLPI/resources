@@ -36,6 +36,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\DBAL\QueryExpression;
 use Entity;
 use Html;
@@ -63,6 +64,30 @@ class Checklist extends CommonDBTM
     public const RESOURCES_CHECKLIST_IN = 1;
     public const RESOURCES_CHECKLIST_OUT = 2;
     public const RESOURCES_CHECKLIST_TRANSFER = 3;
+
+    /**
+     * Checklist type received from a client, refused unless it is one of the constants
+     * above: the value ends up in the criteria selecting the rows to change.
+     *
+     * @param mixed $value posted value
+     *
+     * @return int
+     *
+     * @throws BadRequestHttpException
+     */
+    public static function getPostedType(mixed $value): int
+    {
+        $type = Resource::getPostedId($value);
+        if (!in_array(
+            $type,
+            [self::RESOURCES_CHECKLIST_IN, self::RESOURCES_CHECKLIST_OUT, self::RESOURCES_CHECKLIST_TRANSFER],
+            true,
+        )) {
+            throw new BadRequestHttpException();
+        }
+
+        return $type;
+    }
 
     /**
      * Return the localized name of the current Type
@@ -97,17 +122,6 @@ class Checklist extends CommonDBTM
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]);
-    }
-
-    /**
      * Get Tab Name used for itemtype
      *
      * NB : Only called for existing object
@@ -122,7 +136,8 @@ class Checklist extends CommonDBTM
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        if (!$withtemplate) {
+        // The tab only exists on a resource: its id is read as a resource id below
+        if (!$withtemplate && $item instanceof Resource) {
             if ($item->getID() && $this->canView()) {
                 if ($_SESSION['glpishow_count_on_tabs']) {
                     return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
@@ -146,7 +161,15 @@ class Checklist extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        $ID = $item->getField('id');
+        // The core tab endpoint only authorizes the item it is given: with any other
+        // itemtype, its id would be taken for the id of a resource never checked.
+        if (!$item instanceof Resource) {
+            return false;
+        }
+        $ID = (int) $item->getID();
+        if (!self::canView() || !(new Resource())->can($ID, READ)) {
+            return false;
+        }
         if (self::checkifChecklistExist($ID, 0)) {
             $checklist = new self();
             if ($checklist->canCreate()) {
@@ -219,9 +242,10 @@ class Checklist extends CommonDBTM
     {
         if (isset($input['plugin_resources_resources_id'])
             && isset($input['checklist_type'])) {
+            // Plain values only: an array would select the rows of several resources
             $restrict = [
-                "plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
-                "checklist_type" => $input['checklist_type'],
+                "plugin_resources_resources_id" => Resource::getPostedId($input['plugin_resources_resources_id']),
+                "checklist_type" => self::getPostedType($input['checklist_type']),
             ];
             $dbu = new DbUtils();
             $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
@@ -246,29 +270,43 @@ class Checklist extends CommonDBTM
     }
 
     /**
-     * @param $input
+     * Reopen the checklist of one type of one resource.
+     *
+     * The caller checked the resource: the rows reopened are those of that single id. The
+     * values are validated here as well since they build the selection criteria, where an
+     * array or an operator form would cover any set of resources.
+     *
+     * @param array $input plugin_resources_resources_id, checklist_type
      *
      * @return bool
      */
     public function openFinishedChecklist($input)
     {
+        $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        $checklist_type = self::getPostedType($input['checklist_type'] ?? null);
+        if ($resources_id <= 0) {
+            return false;
+        }
+
         $restrict = [
-            "plugin_resources_resources_id" => $input['plugin_resources_resources_id'],
-            "checklist_type" => $input['checklist_type'],
+            "plugin_resources_resources_id" => $resources_id,
+            "checklist_type" => $checklist_type,
         ];
         $dbu = new DbUtils();
         $checklists = $dbu->getAllDataFromTable("glpi_plugin_resources_checklists", $restrict);
 
-        if (!empty($checklists)) {
-            foreach ($checklists as $checklist) {
-                $this->update([
-                    "id" => $checklist["id"],
-                    "is_checked" => 0,
-                ]);
-            }
-        } else {
+        if (empty($checklists)) {
             return false;
         }
+
+        foreach ($checklists as $checklist) {
+            $this->update([
+                "id" => $checklist["id"],
+                "is_checked" => 0,
+            ]);
+        }
+
+        return true;
     }
 
     /**
@@ -279,6 +317,7 @@ class Checklist extends CommonDBTM
     public static function createTicket($data)
     {
         $result = false;
+        $tid    = false;
         $tt = new TicketTemplate();
 
         // Every value below travels in the posted checklist form. The entity in particular
@@ -318,7 +357,10 @@ class Checklist extends CommonDBTM
             }
             // Set entity
             $input['entities_id'] = $entities_id;
-            $input['actiontime'] = (int) ($data['actiontime'] ?? 0);
+            // The duration travels in the form: kept within the range its dropdown offers
+            // (Dropdown::showTimeStamp(), up to one day), so that the time spent recorded on
+            // the ticket cannot be set to any value.
+            $input['actiontime'] = max(0, min((int) ($data['actiontime'] ?? 0), DAY_TIMESTAMP));
             $res = $source;
 
             $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $input['entities_id'], '', 1);
@@ -334,30 +376,30 @@ class Checklist extends CommonDBTM
                 $input['_users_id_requester_notif']['alternative_email'] = [$alternativeEmail];
 
                 if (isset($res->fields['users_id'])) {
+                    // Default notification settings for the observer: the empty
+                    // _users_id_observer_notif array once passed along is a format the core
+                    // rejects with a warning, before applying those same defaults.
                     $input['_users_id_observer'] = $res->fields['users_id'];
-                    $input['_users_id_observer_notif'] = [];
                 }
 
-                // The assignee travels in the form: keep it only when that user really
-                // holds a profile in the entity the ticket is created in, otherwise fall
-                // back to the current session.
-                $assign = (int) ($data['users_id'] ?? 0);
-                if ($assign > 0) {
-                    $dbu = new DbUtils();
-                    $has_profile = $dbu->getAllDataFromTable(
-                        'glpi_profiles_users',
-                        ['users_id' => $assign]
-                        + $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', $entities_id, true),
-                    );
-                    $input['_users_id_assign'] = count($has_profile) > 0
-                        ? $assign
-                        : Session::getLoginUserID();
-                } else {
-                    $input['_users_id_assign'] = Session::getLoginUserID();
+                // The assignee travels in the form, and the core adds a legacy
+                // _users_id_assign without checking any right. Another user than the session
+                // one is kept only for a session allowed to assign tickets, and only if that
+                // user is one the dropdown of the form offers (a central profile in the entity
+                // of the ticket). Anything else falls back to the current session.
+                $login_id = (int) Session::getLoginUserID();
+                $assign   = (int) ($data['users_id'] ?? 0);
+                if ($assign <= 0
+                    || ($assign !== $login_id
+                        && (!Session::haveRight(Ticket::$rightname, Ticket::ASSIGN)
+                            || !self::isCentralUserOfEntity($assign, $entities_id)))) {
+                    $assign = $login_id;
                 }
+                $input['_users_id_assign'] = $assign;
 
-                $input["items_id"] = [Resource::class => [$data['plugin_resources_resources_id']]];
-                $input["name"] .= " " . Resource::getResourceName($data['plugin_resources_resources_id']);
+                // The resource read back above, not the posted value it was looked up with
+                $input["items_id"] = [Resource::class => [$source->getID()]];
+                $input["name"] .= " " . Resource::getResourceName($source->getID());
             }
 
             //TODO : ADD checklist lists or add config into plugin ?
@@ -365,6 +407,18 @@ class Checklist extends CommonDBTM
             $input['status'] = Ticket::CLOSED;
             $input['id'] = 0;
             $ticket = new Ticket();
+
+            // CommonDBTM::add() checks no right of its own, and the controller only checked
+            // the resource and the checklist right: the ticket needs the right to create a
+            // ticket in its entity, as the add_ticket massive action requires.
+            if (!$ticket->can(-1, CREATE, $input)) {
+                Session::addMessageAfterRedirect(
+                    __("You don't have permission to perform this action."),
+                    false,
+                    ERROR,
+                );
+                return false;
+            }
 
             if ($tid = $ticket->add($input)) {
                 $msg = __('Create a end treatment ticket', 'resources') . " OK - ($tid)"; // Success
@@ -380,7 +434,7 @@ class Checklist extends CommonDBTM
             $changes[1] = '';
             $changes[2] = $msg;
             Log::history(
-                $data['plugin_resources_resources_id'],
+                $source->getID(),
                 Resource::class,
                 $changes,
                 '',
@@ -388,6 +442,40 @@ class Checklist extends CommonDBTM
             );
         }
         return $result;
+    }
+
+    /**
+     * Whether a user holds a central profile in an entity, as the users offered by the
+     * assignee dropdown of the checklist form (User::dropdown() with the "interface" right).
+     *
+     * @param int $users_id    user posted as assignee
+     * @param int $entities_id entity of the ticket
+     *
+     * @return bool
+     */
+    private static function isCentralUserOfEntity(int $users_id, int $entities_id): bool
+    {
+        global $DB;
+
+        $dbu = new DbUtils();
+        $row = $DB->request([
+            'COUNT'      => 'cpt',
+            'FROM'       => 'glpi_profiles_users',
+            'INNER JOIN' => [
+                'glpi_profiles' => [
+                    'ON' => [
+                        'glpi_profiles'       => 'id',
+                        'glpi_profiles_users' => 'profiles_id',
+                    ],
+                ],
+            ],
+            'WHERE'      => [
+                'glpi_profiles_users.users_id' => $users_id,
+                'glpi_profiles.interface'      => 'central',
+            ] + $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', $entities_id, true),
+        ])->current();
+
+        return (int) ($row['cpt'] ?? 0) > 0;
     }
 
     /**
@@ -467,11 +555,34 @@ class Checklist extends CommonDBTM
         return false;
     }
 
+    /**
+     * Whether the session may create the row described by the input given to can().
+     *
+     * CommonDBTM::canCreateItem() checks the entity of the row, which the client chooses: a
+     * row of an entity of the session could name a resource of another entity. That row was
+     * counted against the resource by checkifChecklistFinished() and by the mandatory
+     * checklist test of the arrival and departure tickets, which blocked them, while the
+     * users of the resource could neither see nor fix it. Adding a row changes the resource
+     * it names: UPDATE is required on it, as the checklist forms require it.
+     * prepareInputForAdd() then gives the row the entity of that resource.
+     */
+    public function canCreateItem(): bool
+    {
+        $resources_id = is_array($this->input) ? ($this->input['plugin_resources_resources_id'] ?? 0) : 0;
+
+        return parent::canCreateItem() && Resource::canAttachTo($resources_id);
+    }
+
     public function prepareInputForUpdate($input)
     {
         if (!self::checkLinkInput($input)) {
             return false;
         }
+        // The row stays under the resource and the entity it was created with: can() answered
+        // for those, and moving it would count it against another resource (see
+        // canCreateItem()). transferResource() moves the rows with their resource by itself.
+        unset($input['plugin_resources_resources_id'], $input['entities_id']);
+
         return $input;
     }
 
@@ -481,6 +592,23 @@ class Checklist extends CommonDBTM
 
         if (!self::checkLinkInput($input)) {
             return false;
+        }
+
+        // A row of a resource takes the entity of that resource, whatever the input says, so
+        // that the entity can() checks on the row is the one of the resource it counts for.
+        // The rules, the cron task and the forms already pass that entity.
+        try {
+            $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            return false;
+        }
+        if ($resources_id > 0) {
+            $resource = new Resource();
+            if (!$resource->getFromDB($resources_id)) {
+                return false;
+            }
+            $input['plugin_resources_resources_id'] = $resources_id;
+            $input['entities_id']                   = $resource->fields['entities_id'];
         }
 
         $iterator = $DB->request([
@@ -524,15 +652,23 @@ class Checklist extends CommonDBTM
     {
         global $DB;
 
+        // The row is looked up bound to the resource and type the caller was authorized on,
+        // then written: both have to use the same id, so a value that is not a plain id is
+        // refused instead of being cast for one and not for the other.
+        $id             = Resource::getPostedId($input['id'] ?? null);
+        $resources_id   = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        $checklist_type = self::getPostedType($input['checklist_type'] ?? null);
+        if ($id <= 0 || $resources_id <= 0) {
+            return false;
+        }
+
         $iterator = $DB->request([
             'SELECT' => 'rank',
             'FROM'   => $this->getTable(),
-            // Bind the posted id to the resource and type the caller was authorized on,
-            // so it cannot designate a checklist row of another resource.
             'WHERE'  => [
-                'id'                            => (int) $input['id'],
-                'checklist_type'                => (int) $input['checklist_type'],
-                'plugin_resources_resources_id' => (int) $input['plugin_resources_resources_id'],
+                'id'                            => $id,
+                'checklist_type'                => $checklist_type,
+                'plugin_resources_resources_id' => $resources_id,
             ],
         ]);
 
@@ -543,8 +679,8 @@ class Checklist extends CommonDBTM
                 'SELECT' => ['id', 'rank'],
                 'FROM'   => $this->getTable(),
                 'WHERE'  => [
-                    'checklist_type'                => (int) $input['checklist_type'],
-                    'plugin_resources_resources_id' => (int) $input['plugin_resources_resources_id'],
+                    'checklist_type'                => $checklist_type,
+                    'plugin_resources_resources_id' => $resources_id,
                 ],
                 'LIMIT'  => 1,
             ];
@@ -571,7 +707,7 @@ class Checklist extends CommonDBTM
                 $new_rank = $row['rank'];
 
                 return ($this->update([
-                    'id' => $input['id'],
+                    'id' => $id,
                     'rank' => $new_rank,
                 ]) && $this->update([
                     'id' => $other_ID,
@@ -658,8 +794,13 @@ class Checklist extends CommonDBTM
         $targetchecklist = "./checklist.form.php";
         $targettask = "./task.form.php";
 
+        // The checklist right is global: the resource itself, entity included, has to be
+        // readable before any of its rows is selected. can() leaves it loaded.
+        $plugin_resources_resources_id = (int) $plugin_resources_resources_id;
         $resource = new Resource();
-        $resource->getFromDB($plugin_resources_resources_id);
+        if ($plugin_resources_resources_id <= 0 || !$resource->can($plugin_resources_resources_id, READ)) {
+            return false;
+        }
         $canedit = $resource->can($plugin_resources_resources_id, UPDATE);
         $entities_id = $resource->fields["entities_id"];
         $plugin_resources_contracttypes_id = $resource->fields["plugin_resources_contracttypes_id"];
@@ -1046,10 +1187,24 @@ class Checklist extends CommonDBTM
                             }
                             if (empty($item->fields["plugin_resources_tasks_id"])) {
                                 $input2 = $input;
+                                // The task belongs to the resource of the checklist row
+                                // authorised above, not to the resource the massive action
+                                // request names: the posted parent and entity are dropped, and
+                                // Task::prepareInputForAdd() takes the entity of that resource.
+                                unset(
+                                    $input2['plugin_resources_resources_id'],
+                                    $input2['entities_id'],
+                                    $input2['is_recursive'],
+                                );
+                                $input2['plugin_resources_resources_id'] = (int) $item->fields['plugin_resources_resources_id'];
                                 $input2["name"] = $item->fields["name"];
                                 $input2["comment"] = $item->fields["comment"];
                                 $input2["entities_id"] = $item->fields["entities_id"];
                                 $newID = $task->add($input2);
+                                if (!$newID) {
+                                    $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                                    continue;
+                                }
                                 $tasks_id[$newID] = $newID;
                                 if ($item->update([
                                     "id" => $key,
@@ -1435,7 +1590,8 @@ class Checklist extends CommonDBTM
             return false;
         }
 
-        if (!Session::haveRight(Resource::$rightname, READ)) {
+        // The on-screen tab requires the checklist right: the PDF export prints the same rows
+        if (!Session::haveRight(Resource::$rightname, READ) || !self::canView()) {
             return false;
         }
 
@@ -1449,15 +1605,17 @@ class Checklist extends CommonDBTM
         ]);
         $number = count($iterator);
 
+        // The pdf plugin writes every argument as HTML (TCPDF writeHTMLCell): only the static
+        // markup below is kept, every label and stored value is escaped.
         $pdf->setColumnsSize(100);
         if ($number > 0) {
-            $pdf->displayTitle('<b>' . self::getChecklistType($checklist_type) . '</b>');
+            $pdf->displayTitle('<b>' . htmlescape(self::getChecklistType($checklist_type)) . '</b>');
             $pdf->setColumnsSize(85, 10, 5);
             $pdf->displayTitle(
                 '<b><i>' .
-                __('Name'),
-                __('Linked task', 'resources'),
-                __('Checked', 'resources') . '</i></b>',
+                htmlescape(__('Name')),
+                htmlescape(__('Linked task', 'resources')),
+                htmlescape(__('Checked', 'resources')) . '</i></b>',
             );
 
             foreach ($iterator as $data) {
@@ -1467,13 +1625,13 @@ class Checklist extends CommonDBTM
                     $checked = __('No');
                 }
                 $pdf->displayLine(
-                    $data['name'],
-                    Dropdown::getYesNo($data['plugin_resources_tasks_id']),
-                    $checked,
+                    htmlescape((string) $data['name']),
+                    htmlescape(Dropdown::getYesNo($data['plugin_resources_tasks_id'])),
+                    htmlescape($checked),
                 );
             }
         } else {
-            $pdf->displayLine(__('No checklist found', 'resources'));
+            $pdf->displayLine(htmlescape(__('No checklist found', 'resources')));
         }
 
         $pdf->displaySpace();

@@ -81,17 +81,6 @@ class LDAP extends CommonDBTM
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return bool
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Display Tab for each budget
      *
      * @param array $options
@@ -425,6 +414,27 @@ class LDAP extends CommonDBTM
         return ($config['use_tls'] || $config['use_ssl']) && !Adconfig::allowsInvalidCertificate();
     }
 
+    /**
+     * Whether a distinguished name sits under an organizational unit.
+     *
+     * Distinguished names compare case-insensitively, and the directory may return them with
+     * spaces around the separators that the configured OU does not have (or the reverse).
+     *
+     * @param string $dn DN of an entry, as returned by the directory
+     * @param string $ou DN of the organizational unit
+     *
+     * @return bool false as well when no OU is configured
+     */
+    public static function isDnUnderOu(string $dn, string $ou): bool
+    {
+        $normalize = static fn(string $value): string
+            => strtolower((string) preg_replace('/\s*([,=])\s*/', '$1', trim($value)));
+
+        $ou = $normalize($ou);
+
+        return $ou !== '' && str_ends_with($normalize($dn), ',' . $ou);
+    }
+
     public function createUserAD($data)
     {
         $adConfig = new Adconfig();
@@ -540,6 +550,12 @@ class LDAP extends CommonDBTM
         Container::addConnection(new Connection($config));
         try {
             $user = User::query()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
+            // The search covers the whole base DN, while the plugin only manages the accounts
+            // of the OU it creates them in: refuse to rewrite any other one, as createUserAD()
+            // refuses to create an account elsewhere.
+            if (!self::isDnUnderOu((string) $user->getDn(), (string) $adConfig->getField("ouUser"))) {
+                return [false, []];
+            }
 
 
             $attributes = [];
@@ -607,6 +623,11 @@ class LDAP extends CommonDBTM
         Container::addConnection(new Connection($config));
         try {
             $user = User::query()->whereEquals($adConfig->getField("logAD"), $data["login"])->firstOrFail();
+            // Same boundary as updateUserAD(): only an account of the managed OU is disabled
+            // and moved, never one found elsewhere in the base DN.
+            if (!self::isDnUnderOu((string) $user->getDn(), (string) $adConfig->getField("ouUser"))) {
+                return false;
+            }
 
 
             $attributes = [];

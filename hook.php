@@ -28,6 +28,7 @@
  */
 
 use Glpi\DBAL\QueryExpression;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Search\Provider\SQLProvider;
 use GlpiPlugin\Badges\Badge;
 use GlpiPlugin\Resources\Actionprofile;
@@ -134,6 +135,15 @@ function plugin_resources_install()
     $update171 = false;
     $dbu = new DbUtils();
     $install = false;
+
+    // Version this update starts from, null on a fresh install. GLPI writes the version of the
+    // new files into glpi_plugins as soon as it detects them, before the update runs, so the
+    // plugin keeps its own copy (stored at the end of this function). Installs made before it
+    // existed have none: they predate 4.2.3.
+    $previous_version = null;
+    if ($DB->tableExists("glpi_plugin_resources_resources")) {
+        $previous_version = (string) (\Config::getConfigurationValue('plugin:resources', 'version') ?? '0');
+    }
 
     if (!$DB->tableExists("glpi_plugin_resources_resources")
         && !$DB->tableExists("glpi_plugin_resources_employments")) {
@@ -952,10 +962,31 @@ function plugin_resources_install()
         ['state' => CronTask::STATE_DISABLE],
     );
 
+    // Purging a resource used to leave its directory link, leaving information and imported
+    // values behind, for a resource created later with the same id to adopt. Idempotent.
+    Resource::deleteOrphanChildRows();
+
     Profile::initProfile();
+    // Once per site, when updating a plugin that did not enforce these rights yet. A marker
+    // rather than a version test: a site migrated by one branch (GLPI 11 or 12) and later
+    // updated to the other must not be migrated again, which would give back rights an
+    // administrator removed in between. Fresh installs set the marker below. After
+    // initProfile(), which creates the rights the profiles may still lack.
+    if (
+        $previous_version !== null
+        && !\Config::getConfigurationValue('plugin:resources', 'enforced_rights_migrated')
+    ) {
+        Profile::migrateEnforcedRights(new Migration(PLUGIN_RESOURCES_VERSION));
+    }
     Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
     $migration = new Migration("2.3.0");
     $migration->dropTable('glpi_plugin_resources_profiles');
+
+    \Config::setConfigurationValues('plugin:resources', [
+        'version'                  => PLUGIN_RESOURCES_VERSION,
+        'enforced_rights_migrated' => 1,
+    ]);
+
     return true;
 }
 
@@ -1227,6 +1258,9 @@ function plugin_resources_uninstall()
     // that would resurface on reinstall (all rightnames share the plugin_resources prefix).
     $DB->delete('glpi_profilerights', ['name' => ['LIKE', 'plugin_resources%']]);
 
+    // Installed version kept by plugin_resources_install(): a later install starts afresh
+    \Config::deleteConfigurationValues('plugin:resources', ['version', 'enforced_rights_migrated']);
+
     return true;
 }
 
@@ -1334,6 +1368,9 @@ function plugin_resources_getDatabaseRelations()
                 "glpi_plugin_resources_resourcerestings" => "plugin_resources_resources_id",
                 "glpi_plugin_resources_resourceholidays" => "plugin_resources_resources_id",
                 "glpi_plugin_resources_employments" => "plugin_resources_resources_id",
+                "glpi_plugin_resources_linkads" => "plugin_resources_resources_id",
+                "glpi_plugin_resources_leavinginformations" => "plugin_resources_resources_id",
+                "glpi_plugin_resources_resourceimports" => "plugin_resources_resources_id",
             ],
             "glpi_plugin_resources_choiceitems" => [
                 "glpi_plugin_resources_choices" => "plugin_resources_choiceitems_id",
@@ -1644,6 +1681,29 @@ function plugin_resources_addDefaultJoin($type, $ref_table, &$already_link_table
                 ],
             ];
             return $out;
+
+        case ResourceHoliday::class:
+        case ResourceResting::class:
+        case LeavingInformation::class:
+            // None of these tables carries an entity: the entity is the one of the resource the
+            // row belongs to, which addDefaultWhere() restricts on. The join uses the name the
+            // search option of the resource joins it under, and registers it, so that the
+            // option reuses it instead of joining the table a second time.
+            if (in_array('glpi_plugin_resources_resources', $already_link_tables, true)) {
+                return [];
+            }
+            $already_link_tables[] = 'glpi_plugin_resources_resources';
+
+            return [
+                'LEFT JOIN' => [
+                    'glpi_plugin_resources_resources' => [
+                        'ON' => [
+                            'glpi_plugin_resources_resources' => 'id',
+                            $ref_table => 'plugin_resources_resources_id',
+                        ],
+                    ],
+                ],
+            ];
     }
     return [];
 }
@@ -1691,6 +1751,29 @@ function plugin_resources_addDefaultWhere($type)
             }
 
             return $criteria;
+
+        case ResourceHoliday::class:
+        case ResourceResting::class:
+        case LeavingInformation::class:
+            // The lists showed the rows of every entity: none of these tables has an
+            // entities_id for the core to restrict on. Restrict on the resource joined by
+            // addDefaultJoin(), the way Directory and Recap do; a row whose resource is gone has
+            // no entity and is left out.
+            // A row is read with its resource (ResourceChildItemRightTrait::canViewItem()
+            // requires READ on it): without the resource right, the list showed rows whose
+            // form then answered with an access denied page. Same rule for both.
+            if (!Resource::canView()) {
+                return [new QueryExpression('false')];
+            }
+            $dbu = new DbUtils();
+            $entity_criteria = $dbu->getEntitiesRestrictCriteria(
+                'glpi_plugin_resources_resources',
+                '',
+                '',
+                true,
+            );
+
+            return $entity_criteria !== [] ? [$entity_criteria] : [];
 
         case User::class:
             // Left as it was: the core already restricts this itemtype on glpi_profiles_users,
@@ -1779,6 +1862,62 @@ function plugin_resources_addWhere($link, $nott, $type, $ID, $val)
  *
  * @return array
  */
+/**
+ * Restriction of a join on glpi_plugin_resources_resources made from the search of a core
+ * itemtype (User, Computer...).
+ *
+ * The core restricts the search to the items of its own type, never the resources joined to
+ * them: without this criterion the plugin columns of a user or computer showed (and filtered
+ * on) the HR data of resources of entities the viewer cannot reach, of trashed resources and of
+ * templates. Searches on the plugin types keep their own restriction (addDefaultWhere).
+ *
+ * @param string $type  itemtype searched
+ * @param string $table name or alias of the joined resources table
+ *
+ * @return array criteria for the ON clause of the join, empty for the plugin types
+ */
+function plugin_resources_getResourceJoinRestriction($type, $table)
+{
+    if (str_starts_with((string) $type, 'GlpiPlugin\\Resources\\')) {
+        return [];
+    }
+
+    $dbu = new DbUtils();
+
+    return [
+        $table . '.is_deleted'  => 0,
+        $table . '.is_template' => 0,
+    ] + $dbu->getEntitiesRestrictCriteria($table, '', '', true);
+}
+
+/**
+ * Criteria on the resource joined to a task, in every search reaching the resources from the
+ * tasks (the "Resources" and resource ID columns of the task list, their criteria, the exports
+ * and the API searches built on them).
+ *
+ * The task list is restricted to the entities of the tasks, not to those of their resources: a
+ * task may point to a resource of another entity (attached before Task::prepareInputForAdd()
+ * checked it), and a profile may read tasks without the right to read resources. The search
+ * hands the joined columns out as they are, so the join itself only matches the resources the
+ * session may read, as can(READ) answers for them: the right, then the entity. The resource
+ * tab of a template keeps its tasks: templates are not filtered out.
+ *
+ * The employments are in the same situation (their own entity, a resource that may sit in
+ * another one): the join from the employment list uses the same criteria.
+ *
+ * @param string $table name or alias of the joined resources table
+ *
+ * @return array criteria for the ON clause of the join
+ */
+function plugin_resources_getTaskResourceJoinRestriction(string $table): array
+{
+    if (!Session::haveRight(Resource::$rightname, READ)) {
+        return [new QueryExpression('false')];
+    }
+
+    return (new DbUtils())->getEntitiesRestrictCriteria($table, '', '', true);
+}
+
 function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield, &$already_link_tables)
 {
     // Rename table for meta left join
@@ -1863,6 +2002,8 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         "glpi_plugin_resources_resources_items",
                         "plugin_resources_resources_id",
                     );
+                    // Every option of a core itemtype reaching the resources (and the tables
+                    // joined after them) goes through this join: restricted here once.
                     $left = [
                         'glpi_plugin_resources_resources' => [
                             'ON' => [
@@ -1871,7 +2012,10 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                                 [
                                     'AND' => [
                                         'glpi_plugin_resources_resources_items.itemtype' => $type,
-                                    ],
+                                    ] + plugin_resources_getResourceJoinRestriction(
+                                        $type,
+                                        'glpi_plugin_resources_resources',
+                                    ),
                                 ],
                             ],
                         ],
@@ -1882,12 +2026,19 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         $out['LEFT JOIN'] = $left;
                     }
                 } else {
+                    $on = [
+                        $ref_table => 'plugin_resources_resources_id',
+                        'glpi_plugin_resources_resources' => 'id',
+                    ];
+                    // Tasks and employments carry their own entity, which is all their list is
+                    // restricted to: the resource they point to may sit elsewhere.
+                    if ($ref_table == 'glpi_plugin_resources_tasks'
+                        || $ref_table == 'glpi_plugin_resources_employments') {
+                        $on[] = ['AND' => plugin_resources_getTaskResourceJoinRestriction('glpi_plugin_resources_resources')];
+                    }
                     $out['LEFT JOIN'] = [
                         'glpi_plugin_resources_resources' => [
-                            'ON' => [
-                                $ref_table => 'plugin_resources_resources_id',
-                                'glpi_plugin_resources_resources' => 'id',
-                            ],
+                            'ON' => $on,
                         ],
                     ];
                 }
@@ -1992,7 +2143,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         [
                             'AND' => [
                                 $nt_device . '.itemtype' => $type,
-                            ],
+                            ] + plugin_resources_getResourceJoinRestriction($type, $nt),
                         ],
                     ],
                 ],
@@ -2019,7 +2170,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         [
                             'AND' => [
                                 $nt_device . '.itemtype' => $type,
-                            ],
+                            ] + plugin_resources_getResourceJoinRestriction($type, $nt),
                         ],
                     ],
                 ],
@@ -2071,7 +2222,7 @@ function plugin_resources_addLeftJoin($type, $ref_table, $new_table, $linkfield,
                         [
                             'AND' => [
                                 $nt_device . '.itemtype' => $type,
-                            ],
+                            ] + plugin_resources_getResourceJoinRestriction($type, $nt),
                         ],
                     ],
                 ],
@@ -2699,24 +2850,36 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
         case Resource::class:
             switch ($table . '.' . $field) {
                 case "glpi_plugin_resources_resources.name":
-                    $out = "";
-                    if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $link = Toolbox::getItemTypeFormURL(Resource::class);
-                        if ($output_type == Search::HTML_OUTPUT) {
-                            $out = "<a href=\"" . $link . "?id=" . (int) $data['raw']["ITEM_" . $num . "_2"] . "\">";
+                    // The core names the cell "<itemtype>_<option>" ($num). Option 1 is an
+                    // itemlink, for which the core selects the id of each resource next to its
+                    // name ($data[$num][k]['id']). The former "ITEM_<num>_2" and "META_<num>"
+                    // raw keys never existed in this version: the cell was always left to the
+                    // core, and the task counter never shown.
+                    $out      = "";
+                    $resource = new Resource();
+                    $count    = (int) ($data[$num]['count'] ?? 0);
+                    for ($k = 0; $k < $count; $k++) {
+                        $resources_id = (int) ($data[$num][$k]['id'] ?? 0);
+                        // The resource list only holds readable rows, but the same column is
+                        // also displayed as a meta criterion of other lists: only a resource
+                        // the viewer may read is printed.
+                        if ($resources_id <= 0 || !$resource->can($resources_id, READ)) {
+                            continue;
                         }
-                        $out .= $esc($data['raw']["META_$num"]);
-                        if ($output_type == Search::HTML_OUTPUT) {
-                            if ($_SESSION["glpiis_ids_visible"] || empty($data['raw']["META_$num"])) {
-                                $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
-                            }
-                            $out .= "</a>";
+                        if ($out !== "") {
+                            $out .= "<br>";
                         }
+                        $name = (string) ($data[$num][$k]['name'] ?? '');
+                        $out .= "<a href=\"" . $esc(Resource::getFormURLWithID($resources_id)) . "\">";
+                        $out .= $esc($name);
+                        if ($_SESSION["glpiis_ids_visible"] || $name === '') {
+                            $out .= " (" . $resources_id . ")";
+                        }
+                        $out .= "</a>";
 
-                        if (Session::haveRight(Task::$rightname, READ) && $output_type == Search::HTML_OUTPUT) {
-                            // Built through the query builder: the row id reaches this
-                            // function straight from the search result set, and the raw
-                            // string it used to be concatenated into quoted nothing.
+                        if (Task::canView() && $output_type == Search::HTML_OUTPUT) {
+                            // Only the tasks the viewer may read are counted, the same ones
+                            // the task list opened by the counter shows.
                             $tasks_row = $DB->request([
                                 'SELECT' => [
                                     new QueryExpression('COUNT(' . $DB->quoteName('id') . ') AS ' . $DB->quoteName('nb_tasks')),
@@ -2724,23 +2887,31 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
                                 ],
                                 'FROM'   => 'glpi_plugin_resources_tasks',
                                 'WHERE'  => [
-                                    'plugin_resources_resources_id' => (int) $data['id'],
+                                    'plugin_resources_resources_id' => $resources_id,
                                     'is_deleted'                    => 0,
-                                ],
+                                ] + $dbu->getEntitiesRestrictCriteria('glpi_plugin_resources_tasks', '', '', true),
                             ])->current();
                             $nb_tasks = (int) ($tasks_row['nb_tasks'] ?? 0);
                             $is_finished = (int) ($tasks_row['is_finished'] ?? 0);
-                            $out .= "&nbsp;(<a href=\"" . PLUGIN_RESOURCES_WEBDIR . "/front/task.php?plugin_resources_resources_id=" . (int) $data["id"] . "\">";
+                            // Task list filtered on the resource ID column (Task option 13)
+                            $tasks_url = PLUGIN_RESOURCES_WEBDIR . "/front/task.php?" . Toolbox::append_params([
+                                'criteria' => [
+                                    ['field' => 13, 'searchtype' => 'equals', 'value' => $resources_id],
+                                ],
+                                'reset'    => 'reset',
+                            ]);
+                            $out .= "&nbsp;(<a href=\"" . $esc($tasks_url) . "\">";
                             if (($nb_tasks - $is_finished) > 0) {
                                 $out .= "<span class='plugin_resources_date_over_color'>";
-                                $out .= $nb_tasks - $is_finished . "</span></a>)";
+                                $out .= ($nb_tasks - $is_finished) . "</span></a>)";
                             } else {
                                 $out .= "<span class='plugin_resources_date_day_color'>";
                                 $out .= $nb_tasks . "</span></a>)";
                             }
                         }
                     }
-                    return $out;
+                    // Never an empty cell, which would hand the column back to the core
+                    return $out !== "" ? $out : " ";
                 case "glpi_plugin_resources_resources.date_end":
                     if ($data['raw']["ITEM_$num"] <= date('Y-m-d') && !empty($data['raw']["ITEM_$num"])) {
                         $out = "<span class='plugin_resources_date_color'>" . Html::convDate(
@@ -2798,13 +2969,26 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
             switch ($table . '.' . $field) {
                 case "glpi_plugin_resources_resources.name":
                     $out = "";
-                    if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
+                    // The core names the cell "<itemtype>_<option>" ($num) and this option
+                    // selects the id of the resource as an additional field
+                    // (Task::rawSearchOptions()): both are read from $data[$num][0]. A resource
+                    // the viewer may not read comes out of the join empty
+                    // (plugin_resources_getTaskResourceJoinRestriction()); the id is checked
+                    // again here, so that the name never depends on the join alone.
+                    $task_resources_id = (int) ($data[$num][0]['id'] ?? 0);
+                    if ($task_resources_id > 0 && !(new Resource())->can($task_resources_id, READ)) {
+                        // The task list is restricted to the entities of the tasks, not to
+                        // those of their resources: the identity of a resource the viewer may
+                        // not read stays hidden. The cell is never empty, an empty one handing
+                        // the column back to the core, which prints the raw name.
+                        $out = "(" . $task_resources_id . ")";
+                    } elseif ($task_resources_id > 0) {
+                        $user = Resource::getResourceName($task_resources_id, 2);
                         // getResourceName() formats the name straight from the database.
                         $out = "<a href='" . $esc($user['link']) . "'>";
                         $out .= $esc($user["name"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
-                            $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
+                            $out .= " (" . $task_resources_id . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2904,13 +3088,27 @@ function plugin_resources_giveItem($type, $ID, $data, $num)
             switch ($table . '.' . $field) {
                 case "glpi_plugin_resources_resources.name":
                     $out = "";
-                    if (!empty($data['raw']["ITEM_" . $num . "_2"])) {
-                        $user = Resource::getResourceName($data['raw']["ITEM_" . $num . "_2"], 2);
+                    // Same reading as the task column above: the core names the cell
+                    // "<itemtype>_<option>" ($num) and the option selects the id of the
+                    // resource as an additional field (Employment::rawSearchOptions()). The
+                    // former "ITEM_<num>_2" raw key never existed, so the core printed the
+                    // joined name of any resource, whatever its entity. The join is now
+                    // restricted (plugin_resources_getTaskResourceJoinRestriction()), and the id
+                    // is checked again here.
+                    $employment_resources_id = (int) ($data[$num][0]['id'] ?? 0);
+                    if ($employment_resources_id > 0
+                        && !(new Resource())->can($employment_resources_id, READ)) {
+                        // An employment may be attached to a resource of an entity the viewer
+                        // cannot read: its identity stays hidden. Never an empty cell, which
+                        // would hand the column back to the core.
+                        $out = "(" . $employment_resources_id . ")";
+                    } elseif ($employment_resources_id > 0) {
+                        $user = Resource::getResourceName($employment_resources_id, 2);
                         // getResourceName() formats the name straight from the database.
                         $out = "<a href='" . $esc($user['link']) . "'>";
                         $out .= $esc($user["name"]);
                         if ($_SESSION["glpiis_ids_visible"] || empty($user["name"])) {
-                            $out .= " (" . (int) $data['raw']["ITEM_" . $num . "_2"] . ")";
+                            $out .= " (" . $employment_resources_id . ")";
                         }
                         $out .= "</a>";
                     }
@@ -2968,6 +3166,11 @@ function plugin_resources_dynamicReport($parm)
     $allowed = [Directory::class, Recap::class];
 
     if (in_array($parm["item_type"], $allowed)) {
+        // front/report.dynamic.php of the core already runs checkGlobal(READ) on the itemtype:
+        // test the list right again here, as this hook prints the whole list on its own.
+        if ($parm["item_type"] === Directory::class ? !Directory::canView() : !Recap::canView()) {
+            throw new AccessDeniedHttpException();
+        }
         $params = Search::manageParams($parm["item_type"], $parm);
         $data = Search::prepareDatasForSearch($parm["item_type"], $params);
         Search::constructSQL($data);
@@ -3004,7 +3207,8 @@ function plugin_pre_item_update_resources($item)
                         $values["locations_id"] = $item->input["locations_id"];
                         $values["withtemplate"] = 0;
                         $values["_UpdateFromUser_"] = 1;
-                        $Resource->update($values);
+                        // The location follows the linked item, validated resources included
+                        $Resource->updateFromWorkflow($values);
                         Session::addMessageAfterRedirect(
                             __("Modification of the associated resource's location", "resources"),
                             true,

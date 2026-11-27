@@ -59,14 +59,6 @@ class Team extends CommonDropdown
         return Session::haveRight(self::$rightname, READ);
     }
 
-    /**
-     * @return
-     */
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
 
     /**
      * Return Additional Fields for this type

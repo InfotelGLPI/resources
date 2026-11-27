@@ -32,12 +32,14 @@ namespace GlpiPlugin\Resources;
 use Auth;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\RichText\RichText;
 use Html;
 use Phone;
 use Plugin;
 use PluginFieldsContainer;
 use PluginFieldsField;
 use PluginFieldsLabelTranslation;
+use PluginFieldsProfile;
 use PluginPdfSimplePDF;
 use Session;
 use UserEmail;
@@ -61,9 +63,10 @@ class User extends \User
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        switch ($item->getType()) {
-            case Resource::class:
-                return self::createTabEntry(__('User'));
+        // The tab, and its PDF export, print the linked account: offered only to the
+        // profiles allowed to view users.
+        if ($item instanceof Resource && \User::canView()) {
+            return self::createTabEntry(__('User'));
         }
         return '';
     }
@@ -71,34 +74,36 @@ class User extends \User
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-
-        switch ($item->getType()) {
-            case Resource::class:
-                $user = new self();
-                $resourceItem = new Resource_Item();
-                $resourceUsers = $resourceItem->find(
-                    ['plugin_resources_resources_id' => $item->getID(), 'itemtype' => 'User'],
-                    'id DESC',
-                );
-                if (count($resourceUsers) > 0) {
-                    //Get last user linked to resource
-                    foreach ($resourceUsers as $resourceUser) {
-                        $user->showForm($resourceUser['items_id'], ['resourcesID' => $item->getID()]);
-                        break;
-                    }
-                }
-                return true;
+        // Same conditions as the tab name: the right to view users, and the resource itself
+        // readable. showForm() then requires READ on the very account shown.
+        if (!$item instanceof Resource || !\User::canView() || !$item->can($item->getID(), READ)) {
+            return false;
         }
-        return false;
+
+        $user = new self();
+        $resourceItem = new Resource_Item();
+        $resourceUsers = $resourceItem->find(
+            ['plugin_resources_resources_id' => $item->getID(), 'itemtype' => \User::class],
+            'id DESC',
+            1,
+        );
+        // Last user linked to the resource
+        foreach ($resourceUsers as $resourceUser) {
+            $user->showForm($resourceUser['items_id'], ['resourcesID' => $item->getID()]);
+        }
+
+        return true;
     }
 
     public function showForm($ID, array $options = [])
     {
-        // Simplified User form, shown as a tab of a human resource.
-        if (!\User::canView()) {
+        // Simplified User form, shown as a tab of a human resource. The account linked to a
+        // readable resource may sit in an entity the session has no access to: the right
+        // on that very user is required, as the core user form does.
+        $user = new \User();
+        if (!\User::canView() || (int) $ID <= 0 || !$user->can((int) $ID, READ)) {
             return false;
         }
-        $user = new \User();
 
         $user->initForm($ID, $options);
 
@@ -202,68 +207,58 @@ class User extends \User
     }
 
     /**
-     * Show for PDF an resources : employee informations
+     * Show for PDF a resource: the GLPI account linked to it
      *
-     * @param $pdf object for the output
-     * @param $appli Resource Class
+     * @param PluginPdfSimplePDF $pdf   object for the output
+     * @param Resource           $appli resource exported
+     *
+     * @return false|void
      */
     public static function pdfForResource(PluginPdfSimplePDF $pdf, Resource $appli)
     {
         global $DB;
 
-        $ID = $appli->fields['id'];
+        $ID = (int) $appli->fields['id'];
 
         if (!$appli->can($ID, READ)) {
             return false;
         }
 
-        if (!Session::haveRight(Resource::$rightname, READ)) {
+        // The PDF prints the same account as the on-screen tab: the right to view users is
+        // required, not only the resource one.
+        if (!Session::haveRight(Resource::$rightname, READ) || !\User::canView()) {
             return false;
         }
 
         $iterator = $DB->request([
-            'FROM'  => 'glpi_plugin_resources_resources_items',
-            'WHERE' => [
-                'plugin_resources_resources_id' => (int) $ID,
-                'itemtype'                      => 'User',
+            'SELECT' => ['items_id'],
+            'FROM'   => 'glpi_plugin_resources_resources_items',
+            'WHERE'  => [
+                'plugin_resources_resources_id' => $ID,
+                'itemtype'                      => \User::class,
             ],
-            'ORDER' => 'id DESC',
-            'LIMIT' => 1,
+            'ORDER'  => 'id DESC',
+            'LIMIT'  => 1,
         ]);
-        $rows   = iterator_to_array($iterator, false);
-        $number = count($rows);
-        $pdf->setColumnsSize(100);
-
-        $pdf->displayTitle('<b>' . self::getTypeName(1) . '</b>');
-
-        $addDisplayTitle = [];
-        $addContent = [];
-        if (Plugin::isPluginActive('fields')) {
-            $fieldContainer = new PluginFieldsContainer();
-            if ($fieldContainer->getFromDBByCrit(['itemtypes' => ['LIKE', '%User%']])) {
-                $nameTable = "PluginFieldsUser" . $fieldContainer->getField('name');
-                $itemUser = new $nameTable();
-                for ($i = 0; $i < $number; $i++) {
-                    $user_id = $rows[$i]["items_id"];
-                    if ($itemUser->getFromDBByCrit(['items_id' => $user_id, 'itemtype' => 'User'])) {
-                        foreach ($itemUser->fields as $key => $field) {
-                            if ($key != 'id' && $key != 'items_id' && $key != 'itemtype' && $key != 'plugin_fields_containers_id') {
-                                $fieldFields = new PluginFieldsField();
-                                if ($fieldFields->getFromDBByCrit(['name' => $key])) {
-                                    $item = [
-                                        "itemtype" => "PluginFieldsField",
-                                        "id" => $fieldFields->getID(),
-                                    ];
-                                    $addDisplayTitle[] = PluginFieldsLabelTranslation::getLabelFor($item);
-                                    $addContent[] = $field;
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
+        $users_id = 0;
+        foreach ($iterator as $row) {
+            $users_id = (int) $row['items_id'];
         }
+
+        // The last account linked, printed only if that very user may be read (entity
+        // included), as the core user form requires. A \User instance on purpose: this
+        // class reads the resource items table.
+        $user = new \User();
+        if ($users_id > 0 && !$user->can($users_id, READ)) {
+            return false;
+        }
+
+        // The pdf plugin writes every argument as HTML (TCPDF writeHTMLCell): only the static
+        // markup is kept, every label and stored value is escaped.
+        $pdf->setColumnsSize(100);
+        $pdf->displayTitle('<b>' . htmlescape(self::getTypeName(1)) . '</b>');
+
+        [$addDisplayTitle, $addContent] = $users_id > 0 ? self::getFieldsForPdf($users_id) : [[], []];
         $titles = [
             __('Authentication'),
             __('Last synchronization'),
@@ -285,41 +280,114 @@ class User extends \User
         }
         call_user_func_array([$pdf, "setColumnsSize"], $arrayColumn);
 
-        call_user_func_array([$pdf, "displayTitle"], $titles);
-        if (!$number) {
-            $pdf->displayLine(__('No results found'));
+        call_user_func_array([$pdf, "displayTitle"], self::escapeForPdf($titles));
+        if ($users_id <= 0) {
+            $pdf->displayLine(htmlescape(__('No results found')));
         } else {
-            for ($i = 0; $i < $number; $i++) {
-                $user = new User();
-                $user_id = $rows[$i]["items_id"];
-                $user->getFromDB($user_id);
-                $auth = Auth::getMethodName($user->getField("authtype"), $user->getField("auths_id"));
-                $lastSync = "";
-                $userDN = "";
-                if (!empty($user->getField("date_sync"))) {
-                    //TRANS: %s is the date of last sync
-                    $lastSync = Html::convDateTime($user->fields["date_sync"]);
-                }
-                if (!empty($user->getField("user_dn"))) {
-                    $userDN = $user->getField("user_dn");
-                }
-                if ($user->getField('is_deleted_ldap')) {
-                    $userDN .= __('User missing in LDAP directory');
-                }
-
-                $phone = $user->getField('phone');
-
-                $userEmail = new UserEmail();
-                $userEmail->getFromDBByCrit(['users_id' => $user->getID()]);
-                $email = $userEmail->getName();
+            $auth = Auth::getMethodName($user->fields["authtype"], $user->fields["auths_id"]);
+            $lastSync = "";
+            $userDN = "";
+            if (!empty($user->fields["date_sync"])) {
+                $lastSync = Html::convDateTime($user->fields["date_sync"]);
+            }
+            if (!empty($user->fields["user_dn"])) {
+                $userDN = $user->fields["user_dn"];
+            }
+            if ($user->fields['is_deleted_ldap']) {
+                $userDN .= __('User missing in LDAP directory');
             }
 
-            //         $pdf->displayLine($auth,$lastSync,$userDN,$phone,$email,$addContent[0],$addContent[1],$addContent[2]);
-            $resultsDisplay = [$auth, $lastSync, $userDN, $phone, $email];
-            $resultsDisplay = array_merge($resultsDisplay, $addContent);
-            call_user_func_array([$pdf, "displayLine"], $resultsDisplay);
+            $phone = $user->fields['phone'];
+
+            // Default address of the user: the lookup by user alone found nothing as soon as
+            // the user had more than one address.
+            $email = UserEmail::getDefaultForUser($users_id);
+
+            $resultsDisplay = array_merge([$auth, $lastSync, $userDN, $phone, $email], $addContent);
+            call_user_func_array([$pdf, "displayLine"], self::escapeForPdf($resultsDisplay));
         }
 
         $pdf->displaySpace();
+    }
+
+    /**
+     * Labels and values of the Fields plugin container of the linked account, for the PDF.
+     *
+     * @param int $users_id linked account, already checked readable by the caller
+     *
+     * @return array{0: array<mixed>, 1: array<mixed>} the labels, then the values
+     */
+    private static function getFieldsForPdf(int $users_id): array
+    {
+        // The Fields classes only exist while that plugin is installed.
+        if (
+            !Plugin::isPluginActive('fields')
+            || !class_exists(PluginFieldsContainer::class)
+            || !class_exists(PluginFieldsField::class)
+            || !class_exists(PluginFieldsLabelTranslation::class)
+            || !class_exists(PluginFieldsProfile::class)
+        ) {
+            return [[], []];
+        }
+
+        $fieldContainer = new PluginFieldsContainer();
+        if (!$fieldContainer->getFromDBByCrit(['itemtypes' => ['LIKE', '%User%']])) {
+            return [[], []];
+        }
+        $container_id = (int) $fieldContainer->getID();
+
+        // The Fields plugin grants each container per profile, and leaves it out of the user
+        // form of a profile without READ on it: the PDF must not print it either.
+        $profiles_id = (int) ($_SESSION['glpiactiveprofile']['id'] ?? 0);
+        if (PluginFieldsProfile::getRightOnContainer($profiles_id, $container_id) < READ) {
+            return [[], []];
+        }
+
+        $nameTable = "PluginFieldsUser" . $fieldContainer->getField('name');
+        $itemUser = new $nameTable();
+        if (!$itemUser->getFromDBByCrit(['items_id' => $users_id, 'itemtype' => \User::class])) {
+            return [[], []];
+        }
+
+        $labels = [];
+        $values = [];
+        foreach ($itemUser->fields as $key => $field) {
+            if (in_array($key, ['id', 'items_id', 'itemtype', 'plugin_fields_containers_id'], true)) {
+                continue;
+            }
+            // Only the fields of the container checked above: a label must not come from
+            // another container.
+            $fieldFields = new PluginFieldsField();
+            if (!$fieldFields->getFromDBByCrit(['name' => $key, 'plugin_fields_containers_id' => $container_id])) {
+                continue;
+            }
+            $labels[] = PluginFieldsLabelTranslation::getLabelFor([
+                'itemtype' => PluginFieldsField::class,
+                'id'       => $fieldFields->getID(),
+            ]);
+            // A rich text value is stored as HTML: reduced to its text, then escaped with the
+            // other values, so that the PDF does not print its tags literally.
+            if ($fieldFields->getField('type') === 'richtext') {
+                $field = RichText::getTextFromHtml((string) $field, false, true);
+            }
+            $values[] = $field;
+        }
+
+        return [$labels, $values];
+    }
+
+    /**
+     * Escape values for the pdf plugin, which renders its arguments as HTML.
+     *
+     * @param array<mixed> $values
+     *
+     * @return array<string>
+     */
+    private static function escapeForPdf(array $values): array
+    {
+        return array_map(
+            static fn($value) => htmlescape(is_scalar($value) ? (string) $value : ''),
+            array_values($values),
+        );
     }
 }

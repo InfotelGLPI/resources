@@ -46,7 +46,9 @@ if (Session::getCurrentInterface() == 'central') {
 
 $directory = new Directory();
 
-if (($directory->canView() || Session::haveRight(\Config::$rightname, UPDATE))) {
+// The directory right only: the export (report.dynamic.php) tests Directory::canView() as
+// well, so a fallback here would show a list that cannot be exported.
+if (Directory::canView()) {
     if (empty($_GET["sort"])) {
         $_GET["sort"] = "34";
     }

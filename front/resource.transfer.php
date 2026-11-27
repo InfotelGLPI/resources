@@ -31,7 +31,16 @@ use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
+use GlpiPlugin\Resources\Resource_Change;
 use GlpiPlugin\Resources\TransferEntity;
+
+// The transfer is one of the change actions: front/resource.change.php only redirects here
+// when the active profile may run it, and this page is reachable without going through it.
+// Same test for the form and for its submission: the transfer is set up (TransferEntity) and
+// not left out of the actions an administrator restricted the profile to (Actionprofile).
+if (!Resource_Change::isAllowedAction(Resource_Change::CHANGE_TRANSFER)) {
+    throw new AccessDeniedHttpException();
+}
 
 if (Session::getCurrentInterface() == 'central') {
     Html::header(Resource::getTypeName(2), '', "admin", Menu::class);
@@ -47,18 +56,22 @@ $resource = new Resource();
 
 if (isset($_POST["transferresources"])) {
     // Enforce authorization before transferring: the current user must be allowed
-    // to update the source resource and must have access to the target entity.
-    $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
-    if (!Session::haveAccessToEntity((int) $_POST['entities_id'])) {
+    // to update the source resource and must have access to the target entity. The ids
+    // checked are the ones handed to transferResource(), never the posted values.
+    $resources_id = Resource::checkPostedItem($resource, $_POST["plugin_resources_resources_id"] ?? null, UPDATE);
+    $entities_id = Resource::getPostedId($_POST['entities_id'] ?? null);
+    if (!Session::haveAccessToEntity($entities_id)) {
         throw new AccessDeniedHttpException();
     }
     // The form only offers the entities opened to transfers by the administrator
     // (TransferEntity): enforce that list on the posted value too.
-    if (!(new TransferEntity())->getFromDBByCrit(['entities_id' => (int) $_POST['entities_id']])) {
+    if (!(new TransferEntity())->getFromDBByCrit(['entities_id' => $entities_id])) {
         throw new AccessDeniedHttpException();
     }
     if ($resource->checkTransferMandatoryFields($_POST)) {
-        $resource->transferResource($_POST["plugin_resources_resources_id"], $_POST['entities_id'], $_POST);
+        // Only the values validated above: the rest of the form is not an option of the
+        // transfer (the user to link, in particular, is not part of it).
+        $resource->transferResource($resources_id, $entities_id);
         Html::redirect(PLUGIN_RESOURCES_WEBDIR . "/front/resource.change.php");
     } else {
         Html::back();

@@ -41,6 +41,15 @@ use Migration;
  */
 class Contracttypeprofile extends CommonDBTM
 {
+    // Each row restricts the contract types offered to a profile (templates of the creation
+    // forms, resources of the leaving form). front/contracttypeprofile.form.php writes them
+    // under the core config right; with the plugin right they inherited, the generic entry
+    // points (API, forged massive actions) let a restricted user lift the restriction of their
+    // own profile, as with Actionprofile.
+    use ConfigRightTrait;
+    // Written from the profile form only
+    use NoStandardMassiveActionTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $dohistory = true;
 

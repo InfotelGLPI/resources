@@ -69,17 +69,6 @@ class Habilitation extends CommonTreeDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Return Additional Fileds for this type
      **/
     public function getAdditionalFields()

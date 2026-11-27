@@ -36,7 +36,6 @@ use DbUtils;
 use Dropdown;
 use Html;
 use Migration;
-use Session;
 use Toolbox;
 use Glpi\Application\View\TemplateRenderer;
 
@@ -45,6 +44,9 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class TicketCategory extends CommonDBTM
 {
+    // The row is a plugin setting edited from the configuration page
+    use ConfigRightTrait;
+
     /**
      * functions mandatory
      * getTypeName(), canCreate(), canView()
@@ -52,43 +54,6 @@ class TicketCategory extends CommonDBTM
     public static function getTypeName($nb = 0)
     {
         return __('Category of created tickets', 'resources');
-    }
-
-    /**
-     * The row is a plugin setting edited from the configuration page, which is gated on
-     * config UPDATE. The core Config right carries no CREATE / DELETE / PURGE bit, so every
-     * operation maps onto that single bit instead of using $rightname.
-     *
-     * @return bool
-     */
-    private static function canConfigure()
-    {
-        return (bool) Session::haveRight(\Config::$rightname, UPDATE);
-    }
-
-    public static function canView(): bool
-    {
-        return self::canConfigure();
-    }
-
-    public static function canCreate(): bool
-    {
-        return self::canConfigure();
-    }
-
-    public static function canUpdate(): bool
-    {
-        return self::canConfigure();
-    }
-
-    public static function canDelete(): bool
-    {
-        return self::canConfigure();
-    }
-
-    public static function canPurge(): bool
-    {
-        return self::canConfigure();
     }
 
     /**

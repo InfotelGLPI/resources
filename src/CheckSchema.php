@@ -29,20 +29,21 @@
 
 namespace GlpiPlugin\Resources;
 
-use CommonDBTM;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\System\Diagnostic\DatabaseSchemaIntegrityChecker;
 use Plugin;
+use Session;
 
 /**
+ * Schema check tab of the setup page.
  *
+ * A plain tab: it used to be a CommonDBTM mapped onto glpi_plugin_resources_configs under the
+ * plugin right, which let any HR user read, rewrite or purge the setup row through the
+ * generic entry points of the core.
  */
-class CheckSchema extends CommonDBTM
+class CheckSchema extends CommonGLPI
 {
-    public static string $rightname = 'plugin_resources';
-    private $table = "";
-
     /**
      * functions mandatory
      * getTypeName(), canCreate(), canView()
@@ -61,9 +62,13 @@ class CheckSchema extends CommonDBTM
         return "ti ti-check";
     }
 
-    public static function getTable($classname = null)
+    /**
+     * The check compares every table of the plugin and prints their structure with the
+     * queries to fix them: an administrator diagnostic, behind the right of the setup page.
+     */
+    public static function canView(): bool
     {
-        return "glpi_plugin_resources_configs";
+        return Session::haveRight(\Config::$rightname, UPDATE);
     }
 
     /**
@@ -75,7 +80,7 @@ class CheckSchema extends CommonDBTM
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
-        if ($item->getType() == Config::class) {
+        if ($item->getType() == Config::class && self::canView()) {
             return self::createTabEntry(self::getTypeName());
         }
         return '';
@@ -91,7 +96,9 @@ class CheckSchema extends CommonDBTM
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
-        if ($item->getType() == Config::class) {
+        // The tab loader of the core can be asked for this tab directly: test the right
+        // before running the comparison, not only before listing the tab.
+        if ($item->getType() == Config::class && self::canView()) {
             $self = new self();
             $self->checkSchema(PLUGIN_RESOURCES_VERSION);
         }

@@ -44,6 +44,11 @@ use Session;
  */
 class TaskPlanning extends CommonDBTM
 {
+    // No entity of its own: a planning row is read and written with its task. The task form
+    // writes it through Task::post_addItem() / post_updateItem(), which call add() and
+    // update() directly; the generic entry points of the core go through can() and land here.
+    use TaskChildItemRightTrait;
+
     public static string $rightname = 'plugin_resources_task';
 
     /**
@@ -120,14 +125,20 @@ class TaskPlanning extends CommonDBTM
     {
         global $CFG_GLPI;
 
-        $this->getFromDB($input["id"]);
+        if (!$this->getFromDB($input["id"])) {
+            return false;
+        }
+        // A planning row stays with the task that owns it: a posted task id would move it to
+        // another task (any entity, TaskPlanning has none) and have that task's duration
+        // rewritten by post_updateItem(). The stored owner is used from here on.
+        $input['plugin_resources_tasks_id'] = $this->fields['plugin_resources_tasks_id'];
         // Save fields
         $oldfields = $this->fields;
         $this->fields["begin"] = $input["begin"];
         $this->fields["end"] = $input["end"];
 
         $fup = new Task();
-        $fup->getFromDB($input["plugin_resources_tasks_id"]);
+        $fup->getFromDB($input['plugin_resources_tasks_id']);
 
         if (!$this->test_valid_date()) {
             $this->displayError("date");
@@ -311,12 +322,19 @@ class TaskPlanning extends CommonDBTM
 
         $output = [];
 
-        if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
-            return $parm;
+        // The core calls this method for every planning line displayed, whoever the line is
+        // for, and through the planning_populate hook as well: the task right is required here.
+        if (!Task::canView()) {
+            return $output;
         }
 
-        $who = $parm['who'];
-        $who_group = $parm['whogroup'];
+        // An empty list, not the parameters: the caller iterates over the return value as events
+        if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
+            return $output;
+        }
+
+        $who = (int) ($parm['who'] ?? 0);
+        $who_group = (int) ($parm['whogroup'] ?? 0);
         $begin = $parm['begin'];
         $end = $parm['end'];
         // Get items to print
@@ -362,6 +380,31 @@ class TaskPlanning extends CommonDBTM
             ];
         }
 
+        // The line displayed may be the one of another user or group: the tasks shown are
+        // limited to what the viewer may read, the same perimeter as the plugin task lists
+        // (entity of the task and of its resource, no deleted task, no deleted or template
+        // resource).
+        $dbu = new DbUtils();
+        $where = $assign + [
+            'glpi_plugin_resources_taskplannings.end'   => ['>', $begin],
+            'glpi_plugin_resources_taskplannings.begin' => ['<', $end],
+            'glpi_plugin_resources_tasks.is_finished'   => ['!=', 1],
+            'glpi_plugin_resources_tasks.is_deleted'    => 0,
+            'glpi_plugin_resources_resources.is_deleted'  => 0,
+            'glpi_plugin_resources_resources.is_template' => 0,
+        ];
+        foreach ([new Task(), new Resource()] as $restricted) {
+            $entities_crit = $dbu->getEntitiesRestrictCriteria(
+                $restricted->getTable(),
+                '',
+                '',
+                $restricted->maybeRecursive(),
+            );
+            if (count($entities_crit)) {
+                $where[] = $entities_crit;
+            }
+        }
+
         $iterator = $DB->request([
             'SELECT'    => [
                 'glpi_plugin_resources_tasks.*',
@@ -371,19 +414,22 @@ class TaskPlanning extends CommonDBTM
                 'glpi_plugin_resources_tasktypes.name AS type',
             ],
             'FROM'      => 'glpi_plugin_resources_tasks',
-            'LEFT JOIN' => [
+            'INNER JOIN' => [
                 'glpi_plugin_resources_taskplannings' => [
                     'ON' => [
                         'glpi_plugin_resources_taskplannings' => 'plugin_resources_tasks_id',
                         'glpi_plugin_resources_tasks'         => 'id',
                     ],
                 ],
+                // Inner join: a task whose resource is gone has no perimeter to be checked against
                 'glpi_plugin_resources_resources' => [
                     'ON' => [
                         'glpi_plugin_resources_resources' => 'id',
                         'glpi_plugin_resources_tasks'     => 'plugin_resources_resources_id',
                     ],
                 ],
+            ],
+            'LEFT JOIN' => [
                 'glpi_plugin_resources_tasktypes' => [
                     'ON' => [
                         'glpi_plugin_resources_tasktypes' => 'id',
@@ -391,19 +437,16 @@ class TaskPlanning extends CommonDBTM
                     ],
                 ],
             ],
-            'WHERE'     => $assign + [
-                'glpi_plugin_resources_taskplannings.end'   => ['>', $begin],
-                'glpi_plugin_resources_taskplannings.begin' => ['<', $end],
-                'glpi_plugin_resources_tasks.is_finished'   => ['!=', 1],
-            ],
+            'WHERE'     => $where,
             'ORDER'     => 'glpi_plugin_resources_taskplannings.begin',
         ]);
 
         if (count($iterator) > 0) {
             foreach ($iterator as $data) {
                 $key = $parm["begin"] . $data["id"] . "$$$" . "plugin_resource";
-                $output[$key]['color'] = $parm['color'];
-                $output[$key]['event_type_color'] = $parm['event_type_color'];
+                // Not passed by the iCal export nor by the "already planned" check
+                $output[$key]['color'] = $parm['color'] ?? '';
+                $output[$key]['event_type_color'] = $parm['event_type_color'] ?? '';
                 $output[$key]["id"] = $data["id"];
                 $output[$key]["plugin_resources_resources_id"] = $data["plugin_resources_resources_id"];
                 $output[$key]["users_id"] = $data["users_id"];
@@ -436,6 +479,14 @@ class TaskPlanning extends CommonDBTM
      * */
     public static function displayPlanningItem(array $val, $who, $type = "", $complete = 0)
     {
+        // Also reachable through the display_planning hook: only a task the session may read
+        // is rendered, whatever event data the caller hands over.
+        $tasks_id = (int) ($val["id"] ?? 0);
+        $task = new Task();
+        if ($tasks_id <= 0 || !Task::canView() || !$task->can($tasks_id, READ)) {
+            return '';
+        }
+
         $dbu = new DbUtils();
 
         $time_label = '';
@@ -469,12 +520,13 @@ class TaskPlanning extends CommonDBTM
         // tooltip, so any of the three carried a stored XSS to every user displaying the planning.
         // A template escapes them by construction instead of relying on a call being remembered.
         return TemplateRenderer::getInstance()->render('@resources/planning_item.html.twig', [
-            'id'                 => (int) $val["id"],
+            'id'                 => $tasks_id,
             'rand'               => mt_rand(),
             'task_url'           => PLUGIN_RESOURCES_WEBDIR . "/front/task.form.php?id="
-                . (int) $val["id"],
+                . $tasks_id,
+            // The resource of the task read back above
             'resource_url'       => PLUGIN_RESOURCES_WEBDIR . "/front/resource.form.php?id="
-                . (int) ($val["plugin_resources_resources_id"] ?? 0),
+                . (int) $task->fields["plugin_resources_resources_id"],
             'heading_format'     => $heading_format,
             'time_label'         => $time_label,
             // Truncated but not escaped, because the template escapes on output. Html::resume_text()

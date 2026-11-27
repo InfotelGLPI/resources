@@ -250,4 +250,19 @@ class WizardStepsTest extends DbTestCase
             );
         }
     }
+
+    public function testResourcesCreatedByTheWizardAreRememberedForTheSession(): void
+    {
+        // The employer step accepts the Employee CREATE right on the rows the creation of
+        // the resource by this session wrote, never on another resource
+        $created = $this->createResource()->getID();
+        $other   = $this->createResource()->getID();
+
+        $this->assertFalse(Wizard::isCreatedInSession($created));
+        Wizard::rememberCreatedResource($created);
+        Wizard::rememberCreatedResource(0);
+        $this->assertTrue(Wizard::isCreatedInSession($created));
+        $this->assertFalse(Wizard::isCreatedInSession($other));
+        $this->assertFalse(Wizard::isCreatedInSession(0));
+    }
 }

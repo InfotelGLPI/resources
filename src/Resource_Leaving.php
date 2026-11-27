@@ -40,6 +40,9 @@ use Session;
  */
 class Resource_Leaving extends CommonDBTM
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait;
+
     public static string $rightname = 'plugin_resources';
 
     /**
@@ -70,17 +73,6 @@ class Resource_Leaving extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return booleen
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
 

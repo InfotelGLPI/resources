@@ -41,6 +41,9 @@ use Session;
  */
 class ResourceHoliday extends CommonDBTM
 {
+    // No entity of its own: the item rights are those of the resource
+    use ResourceChildItemRightTrait;
+
     public static string $rightname = 'plugin_resources_holiday';
 
     public bool $dohistory = true;
@@ -70,17 +73,6 @@ class ResourceHoliday extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -155,6 +147,12 @@ class ResourceHoliday extends CommonDBTM
 
         //unset($input['picture']);
         $this->getFromDB($input["id"]);
+
+        // The form may move the period to another resource: canUpdateItem() only answered
+        // for the one it is stored under.
+        if (!$this->canMoveToParentResource($input)) {
+            return [];
+        }
 
         $input["_old_date_begin"] = $this->fields["date_begin"];
         $input["_old_date_end"] = $this->fields["date_end"];

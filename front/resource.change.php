@@ -27,26 +27,35 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Resources\Resource_Change;
 use GlpiPlugin\Servicecatalog\Main;
 use GlpiPlugin\Resources\Menu;
 use GlpiPlugin\Resources\Resource;
 
 $resource = new Resource();
-$resource_change = new Resource_Change();
 
-if (isset($_POST["change_action"]) && $_POST["change_action"] != 0 && $_POST["plugin_resources_resources_id"] != 0) {
-    if ($_POST["change_action"] == Resource_Change::CHANGE_TRANSFER && isset($_POST['plugin_resources_resources_id'])) {
+// The ids are checked and used as the same integers, see Resource::getPostedId()
+$change_action = Resource::getPostedId($_POST["change_action"] ?? null);
+$resources_id  = Resource::getPostedId($_POST["plugin_resources_resources_id"] ?? null);
+
+if ($change_action > 0 && $resources_id > 0) {
+    // The dropdown of the form only offers the actions set up and granted to the active
+    // profile: the posted id is held to the same list, before anything runs.
+    if (!Resource_Change::isAllowedAction($change_action)) {
+        throw new AccessDeniedHttpException();
+    }
+    if ($change_action == Resource_Change::CHANGE_TRANSFER) {
         Html::redirect(
-            PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php?plugin_resources_resources_id=" . $_POST['plugin_resources_resources_id'],
+            PLUGIN_RESOURCES_WEBDIR . "/front/resource.transfer.php?plugin_resources_resources_id=" . $resources_id,
         );
     } else {
         // Enforce authorization before mutating: the current user must hold the plugin
         // UPDATE right and have access to the target resource's entity. Without this any
         // authenticated user could change an arbitrary resource across entities (IDOR).
         // Mirrors the guard already present in resource.transfer.php / resource.remove.php.
-        $resource->check((int) $_POST['plugin_resources_resources_id'], UPDATE);
-        $resource_change->startingChange($_POST['plugin_resources_resources_id'], $_POST["change_action"], $_POST);
+        $resource->check($resources_id, UPDATE);
+        Resource_Change::startingChange($resources_id, $change_action, $_POST);
         Html::back();
     }
 } else {

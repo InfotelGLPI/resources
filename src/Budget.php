@@ -72,17 +72,6 @@ class Budget extends CommonDBTM
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return bool
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * Display Tab for each budget
      *
      * @param array $options

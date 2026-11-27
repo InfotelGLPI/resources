@@ -72,6 +72,10 @@ if (empty($_POST)) {
     $_POST = array_intersect_key($_GET, array_flip($get_navigation_keys));
 }
 
+// The resource every step goes on with, 0 for one being created. The branches check a right
+// on this integer and act on it, never on the posted value: see Resource::getPostedId().
+$posted_resources_id = Resource::getPostedId($_POST['plugin_resources_resources_id'] ?? null);
+
 //if (isset($_POST["secondary_services"])) {
 //    $_POST["secondary_services"] = json_encode($_POST["secondary_services"]);
 //} else {
@@ -81,8 +85,8 @@ if (empty($_POST)) {
 if (isset($_POST["cancel_request"])) {
     // The resource id is client-supplied: enforce entity access on the targeted
     // record (canPurge() only checks the global right and allows cross-entity IDOR).
-    $resource->check((int) $_POST['plugin_resources_resources_id'], PURGE);
-    $resource->delete(['id' => $_POST['plugin_resources_resources_id']], 1);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, PURGE);
+    $resource->delete(['id' => $resources_id], 1);
     Html::back();
 }
 
@@ -159,35 +163,38 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $newresource = 0;
         if ($resource->canCreate() && isset($_POST["third_step"])) {
 
-            if (isset($_POST["plugin_resources_resources_id"])
-                && $_POST["plugin_resources_resources_id"] > 0) {
+            if ($posted_resources_id > 0) {
                 // Updating an existing resource: canCreate() only checks the global
                 // right, so enforce entity access on the targeted record (anti-IDOR).
-                $resource->check((int) $_POST["plugin_resources_resources_id"], UPDATE);
+                $resource->check($posted_resources_id, UPDATE);
                 // Same freeze as the update branch of front/resource.form.php: once the
                 // information is validated, the wizard must not rewrite it either.
-                if ($resource->isFrozenAfterValidation()) {
-                    throw new AccessDeniedHttpException();
-                }
-                $_POST['id'] = $_POST["plugin_resources_resources_id"];
-                $resource->update($_POST);
-                $newresource = $_POST['plugin_resources_resources_id'];
+                $resource->checkNotFrozen();
+                // The employer is stored on the Employee row of the resource, which takes the
+                // Employee right: checked before anything is written.
+                $employer_write = Employee::getEmployerWrite($posted_resources_id, $_POST);
+                // The row updated is the one checked and frozen-tested above
+                $resource->update(['id' => $posted_resources_id] + $_POST);
+                $newresource = $posted_resources_id;
             } else {
                 // canCreate() only answers for the global right: check(-1, CREATE, $_POST)
                 // additionally confines the posted entities_id to the session scope, which
                 // add() never does on its own.
                 unset($_POST['id']);
+                // The second step posts the template it was prefilled from as "template":
+                // Resource::prepareInputForAdd() reads the source of the clone from
+                // id_template (checked there, see Resource::getTemplateSourceId()), so that
+                // the new resource gets the child rows of its template, as from the central form.
+                $_POST['id_template'] = $_POST['template'] ?? 0;
                 $resource->check(-1, CREATE, $_POST);
+                $employer_write = Employee::getEmployerWrite(0, $_POST, Resource::getTemplateSourceId($_POST));
                 $newresource = $resource->add($_POST);
+                // The next steps fill in the rows this creation wrote (see four_step)
+                Wizard::rememberCreatedResource((int) $newresource);
             }
 
-            if (isset($_POST['plugin_resources_employers_id']) && $newresource > 0) {
-                $employee = new Employee();
-                $employee->add([
-                    'plugin_resources_employers_id' => $_POST['plugin_resources_employers_id'],
-                    'plugin_resources_resources_id' => $newresource,
-                    'plugin_resources_clients_id' => 0,
-                ]);
+            if ($newresource > 0) {
+                Employee::saveEmployerWrite((int) $newresource, $employer_write);
             }
         } else {
 
@@ -251,23 +258,52 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // resource (the entity owner). Under the sole checkGlobal(READ) entry guard, this
     // branch would otherwise let a read-only user create/update Employee records on
     // resources of any entity.
-    $resources_id = (int) ($_POST['plugin_resources_resources_id'] ?? 0);
-    $resource->check($resources_id, UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
 
-    if (isset($_POST['id']) && $_POST['id'] > 0) {
-        // The guard above answers for the resource, the write answers for another id: without
-        // correlating the two, a valid resource of the caller let them update the Employee row
-        // of any other resource. Resolve the owner from the row itself.
-        Resource::checkChildOwnership($employee, (int) $_POST['id'], UPDATE);
-        $_POST['plugin_resources_resources_id'] = $employee->fields['plugin_resources_resources_id'];
-        $employee->update($_POST);
-    } else {
-        // Pin the parent to the validated resource so the new row cannot be attached elsewhere.
-        $_POST['plugin_resources_resources_id'] = $resources_id;
-        $newid = $employee->add($_POST);
+    // The page only shows this step when the contract type of the resource enables it and
+    // the profile holds the Employee right: the POST is reachable without the page, so both
+    // conditions stand here too (the right for the write actually done, below).
+    if (!ContractType::checkWizardSetup($resources_id, "use_employee_wizard")) {
+        throw new AccessDeniedHttpException();
     }
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
+    $employees_id = Resource::getPostedId($_POST['id'] ?? null);
+    if ($employees_id > 0) {
+        // The guard above answers for the resource, the write answers for another id: without
+        // correlating the two, a valid resource of the caller let them update the Employee row
+        // of any other resource. Resolve the owner from the row itself, and go on with it.
+        Resource::checkChildOwnership($employee, $employees_id, UPDATE);
+        $resources_id = (int) $employee->fields['plugin_resources_resources_id'];
+
+        // The step shows the row that exists, posted back as it is when left untouched: only
+        // the employer and the client it shows are written, and only when they change, so an
+        // unchanged step writes nothing and takes no Employee right.
+        $input = ['id' => $employees_id];
+        foreach (['plugin_resources_employers_id', 'plugin_resources_clients_id'] as $field) {
+            if (array_key_exists($field, $_POST)
+                && (!is_scalar($_POST[$field])
+                    || (string) $_POST[$field] !== (string) $employee->fields[$field])) {
+                $input[$field] = $_POST[$field];
+            }
+        }
+        if (count($input) > 1) {
+            // A change takes UPDATE, or CREATE when the row is one the creation of the
+            // resource by this session wrote (copied from its template, or written with the
+            // employer of the second step): the step offers it to profiles holding CREATE
+            // only, and choosing the employer of a new resource takes CREATE in
+            // Employee::getEmployerWrite() as well.
+            if (!Session::haveRight(Employee::$rightname, UPDATE)
+                && !(Session::haveRight(Employee::$rightname, CREATE)
+                    && Wizard::isCreatedInSession($resources_id))) {
+                throw new AccessDeniedHttpException();
+            }
+            $employee->update($input);
+        }
+    } else {
+        Session::checkRight(Employee::$rightname, CREATE);
+        // Pin the parent to the validated resource so the new row cannot be attached elsewhere.
+        $newid = $employee->add(['plugin_resources_resources_id' => $resources_id] + $_POST);
+    }
 
     $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
     $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
@@ -286,7 +322,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     } elseif ($wizard_entrance_information) {
         $wizard->wizardEightStep($resources_id);
     } else {
-        $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+        $resource->fields['plugin_resources_resources_id'] = $resources_id;
         $resource->fields['resources_step'] = 'four_step';
         Plugin::doHook('item_show', $resource);
         $resource->redirectToList();
@@ -305,42 +341,43 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     //    $wizard->wizardFourStep($resources_id);
 
 } elseif (isset($_POST["addcomment"])) {
-    $resources_id = $_POST["plugin_resources_resources_id"];
     // canCreate() answers for the global right bit only: the resource id is posted, so
-    // authorise the record itself before writing anything under it.
-    $resource->check((int) $resources_id, UPDATE);
+    // authorise the record itself before writing anything under it. The comment is then
+    // read from and written to the very row checked.
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
+    // The comment is a field of the resource: frozen with the rest once validated
+    $resource->checkNotFrozen();
     if ($resource->canCreate()) {
-        $choice->addComment($_POST);
+        $choice->addComment($resource, (string) ($_POST['comment'] ?? ''));
     }
 
     $wizard->wizardFourStep($resources_id);
 } elseif (isset($_POST["addchoice"])) {
-    $resources_id = $_POST["plugin_resources_resources_id"];
     // canCreate() answers for the global right bit only: the resource id is posted, so
     // authorise the record itself before writing anything under it.
-    $resource->check((int) $resources_id, UPDATE);
-    if ($resource->canCreate(
-    ) && $_POST['plugin_resources_choiceitems_id'] > 0 && $_POST['plugin_resources_resources_id'] > 0) {
-        $choice->addHelpdeskItem($_POST);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
+    $choiceitems_id = Resource::getPostedId($_POST['plugin_resources_choiceitems_id'] ?? null);
+    if ($resource->canCreate() && $choiceitems_id > 0) {
+        $choice->addHelpdeskItem($resources_id, $choiceitems_id);
     }
     $wizard->wizardFourStep($resources_id);
 } elseif (isset($_POST["deletechoice"])) {
-    $resources_id = $_POST["plugin_resources_resources_id"];
     // Choice carries no entity of its own and the row id is posted alongside an unrelated
     // resource id. Resolve the owning resource from the row about to be deleted -- never
     // from the id posted next to it -- and require UPDATE there.
-    if ($choice->getFromDB((int) ($_POST["id"] ?? 0))) {
-        $resource->check((int) $choice->fields['plugin_resources_resources_id'], UPDATE);
+    $choices_id = Resource::getPostedId($_POST["id"] ?? null);
+    if ($choices_id > 0 && $choice->getFromDB($choices_id)) {
+        Resource::checkOwnership($choice->fields['plugin_resources_resources_id']);
         $choice->delete(['id' => $choice->getID()]);
     }
 
-    $wizard->wizardFourStep($resources_id);
+    // The step re-checks READ on the resource it renders
+    $wizard->wizardFourStep($posted_resources_id);
 
 } elseif (isset($_POST["five_step"])) {
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
     // Every step reached from here renders the resource: authorise the posted record.
-    $resource->check((int) $resources_id, READ);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, READ);
 
     $wizard_picture = ContractType::checkWizardSetup($resources_id, "use_picture_wizard");
     $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
@@ -356,14 +393,14 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     } elseif ($wizard_entrance_information) {
         $wizard->wizardEightStep($resources_id);
     } else {
-        $resource->fields['plugin_resources_resources_id'] = $_POST['plugin_resources_resources_id'];
+        $resource->fields['plugin_resources_resources_id'] = $resources_id;
         $resource->fields['resources_step'] = 'four_step';
         Plugin::doHook('item_show', $resource);
         $resource->redirectToList();
     }
 } elseif (isset($_POST["six_step"])) {
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
+    $resources_id = $posted_resources_id;
 
     $wizard_habilitation = ContractType::checkWizardSetup($resources_id, "use_habilitation_wizard");
     $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
@@ -383,13 +420,13 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     }
 } elseif (isset($_POST["upload_five_step"])) {
 
-    $resources_id = (int) $_POST["plugin_resources_resources_id"];
-
     // The target resource id is client-supplied and this page only gates entry with
     // checkGlobal(READ): enforce a per-record UPDATE right (right bit + entity access)
     // before overwriting the photo, otherwise a READ-only or cross-entity caller could
     // replace an arbitrary resource's picture. check() halts (AccessDenied) on failure.
-    $resource->check($resources_id, UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
+    // The picture is part of the information frozen by the validation
+    $resource->checkNotFrozen();
 
     // Html::file() uploads asynchronously and replaces the file input, so $_FILES is empty
     // here: the picture already sits in GLPI_TMP_DIR and only its name reaches _picture[0].
@@ -413,14 +450,14 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["seven_step"])) {
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
-
     // ResourceHabilitation carries no entities_id of its own: gate on UPDATE of the
-    // parent resource before creating habilitation rows (entry guard is only READ).
-    $resource->check((int) $resources_id, UPDATE);
+    // parent resource before creating habilitation rows (entry guard is only READ). The
+    // habilitations replaced are those of the id checked, not of the posted value.
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
+    $input = ['plugin_resources_resources_id' => $resources_id] + $_POST;
 
-    if ($resourcehabilitation->checkRequiredFields($_POST)) {
-        $resourcehabilitation->addResourceHabilitation($_POST);
+    if ($resourcehabilitation->checkRequiredFields($input)) {
+        $resourcehabilitation->addResourceHabilitation($input);
 
         $wizard_documents = ContractType::checkWizardSetup($resources_id, "use_documents_wizard");
         $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
@@ -452,13 +489,14 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // Document alone satisfies check(-1, CREATE) and the Resource is only checked for READ.
     // Require the write right on the Resource explicitly, exactly as the upload_seven_step
     // branch below already does.
-    $resources_id = (int) $_POST["items_id"];
+    // The document is linked to the resource checked: the posted pair is not reused.
     $resource = new Resource();
-    $resource->check($resources_id, UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST["items_id"] ?? null, UPDATE);
+    $input = ['items_id' => $resources_id, 'itemtype' => Resource::class] + $_POST;
 
     $document_item = new Document_Item();
-    $document_item->check(-1, CREATE, $_POST);
-    $document_item->add($_POST);
+    $document_item->check(-1, CREATE, $input);
+    $document_item->add($input);
     $wizard->wizardSevenStep($resources_id);
 
 } elseif (isset($_POST["upload_seven_step"])) {
@@ -466,9 +504,11 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     // The target resource is posted by the client and the entry guard of this file is only a
     // global checkGlobal(READ), which says nothing about this particular record. Authorize it
     // before anything is attached to it: check() covers both the right and the entity scope.
-    $resources_id = (int) $_POST["items_id"];
     $resource = new Resource();
-    $resource->check($resources_id, UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $_POST["items_id"] ?? null, UPDATE);
+    // Document::add() links the new document to the item named in its input: name the
+    // resource checked, not the posted pair.
+    $_POST = ['items_id' => $resources_id, 'itemtype' => Resource::class] + $_POST;
 
     $doc = new Document();
     $doc->check(-1, CREATE, $_POST);
@@ -500,7 +540,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["eight_step"])) {
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
+    $resources_id = $posted_resources_id;
     $wizard_entrance_information = ContractType::checkWizardSetup($resources_id, "use_entrance_information");
     if ($wizard_entrance_information) {
         $wizard->wizardEightStep($resources_id);
@@ -513,18 +553,14 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
 } elseif (isset($_POST["nine_step"])) {
 
-    $resources_id = $_POST["plugin_resources_resources_id"];
-
     // Entry guard is only checkGlobal(READ): enforce UPDATE right + entity access on the
     // target resource before writing its fields (READ->write escalation + cross-entity IDOR).
-    $resource->check((int) $resources_id, UPDATE);
+    $resources_id = Resource::checkPostedItem($resource, $posted_resources_id, UPDATE);
     // Recruitment fields are part of the frozen form as well.
-    if ($resource->isFrozenAfterValidation()) {
-        throw new AccessDeniedHttpException();
-    }
+    $resource->checkNotFrozen();
 
     $data = [];
-    $data['id'] = $_POST['plugin_resources_resources_id'];
+    $data['id'] = $resources_id;
     $data['date_agreement_candidate'] = $_POST['date_agreement_candidate'] ?? null;
     $data['plugin_resources_degreegroups_id'] = $_POST['plugin_resources_degreegroups_id'] ?? 0;
     $data['plugin_resources_recruitingsources_id'] = $_POST['plugin_resources_recruitingsources_id'] ?? 0;
@@ -546,13 +582,13 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
     $wizard->wizardFirstStep(0, $values);
 
 } elseif (isset($_POST["undo_third_step"])) {
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
     //OK
     $wizard->wizardSecondStep($resources_id);
 
 } elseif (isset($_POST["undo_four_step"])) {
 
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
 
     $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
 
@@ -566,7 +602,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $wizard->wizardSecondStep($resources_id, $values);
     }
 } elseif (isset($_POST["undo_five_step"])) {
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
 
     $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
     $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
@@ -584,7 +620,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $wizard->wizardSecondStep($resources_id, $values);
     }
 } elseif (isset($_POST["undo_six_step"])) {
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
 
     $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
     $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
@@ -602,7 +638,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
         $wizard->wizardSecondStep($resources_id, $values);
     }
 } elseif (isset($_POST["undo_seven_step"])) {
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
 
     $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
     $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");
@@ -625,7 +661,7 @@ if (isset($_POST["second_step"]) || isset($_GET["second_step"])) {
 
     //next step : email and finish resource creation
 } elseif (isset($_POST["undo_eight_step"])) {
-    $resources_id = $_POST['plugin_resources_resources_id'];
+    $resources_id = $posted_resources_id;
 
     $wizard_employee = ContractType::checkWizardSetup($resources_id, "use_employee_wizard");
     $wizard_need = ContractType::checkWizardSetup($resources_id, "use_need_wizard");

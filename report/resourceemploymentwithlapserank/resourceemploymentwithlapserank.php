@@ -288,16 +288,18 @@ if ($nbtot > 0) {
 
     echo ReportExport::showNewLine($output_type);
 
-    showTitle($output_type, $num, __('Entity'), 'entity', true);
-    showTitle($output_type, $num, __('Type'), 'type');
-    showTitle($output_type, $num, __('Surname'), 'name', true);
-    showTitle($output_type, $num, __('First name'), 'firstname', true);
-    showTitle($output_type, $num, _x('user', 'Administrative number'), 'registration_number', true);
-    showTitle($output_type, $num, Rank::getTypeName(1), 'rankName', true);
-    showTitle($output_type, $num, __('Arrival date', 'resources'), 'date_begin', true);
-    showTitle($output_type, $num, __('Departure date', 'resources'), 'date_end', true);
-    showTitle($output_type, $num, Rank::getTypeName(1) . " - " . __('Begin date'), 'begin_date', true);
-    showTitle($output_type, $num, Rank::getTypeName(1) . " - " . __('End date'), 'end_date', true);
+    // Criteria of the report, carried over by the sort links of the column headers
+    $sort_criteria = $report->getRequestParameters();
+    showTitle($output_type, $num, $sort_criteria, __('Entity'), 'entity', true);
+    showTitle($output_type, $num, $sort_criteria, __('Type'), 'type');
+    showTitle($output_type, $num, $sort_criteria, __('Surname'), 'name', true);
+    showTitle($output_type, $num, $sort_criteria, __('First name'), 'firstname', true);
+    showTitle($output_type, $num, $sort_criteria, _x('user', 'Administrative number'), 'registration_number', true);
+    showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1), 'rankName', true);
+    showTitle($output_type, $num, $sort_criteria, __('Arrival date', 'resources'), 'date_begin', true);
+    showTitle($output_type, $num, $sort_criteria, __('Departure date', 'resources'), 'date_end', true);
+    showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1) . " - " . __('Begin date'), 'begin_date', true);
+    showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1) . " - " . __('End date'), 'end_date', true);
 
     echo ReportExport::showEndLine($output_type);
 
@@ -305,17 +307,17 @@ if ($nbtot > 0) {
         $dataAll = array_slice($dataAll, $start, $limit);
     }
 
-    // Escape raw DB values (resource identity, rank/profession labels) before output:
-    // ReportExport::showItem() concatenates its value straight into the <td>, and GLPI 10+
-    // stores these fields unencoded, so a crafted value would otherwise run as HTML.
-    $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+    // ReportExport::showItem() escapes plain values itself. The links below are markup built
+    // here: the stored values they embed are escaped with this closure, and the cell is then
+    // passed as trusted HTML.
+    $escape = static fn($v) => htmlescape((string) $v);
 
     foreach ($dataAll as $key => $data) {
         $num = 1;
         echo ReportExport::showNewLine($output_type);
         echo ReportExport::showItem(
             $output_type,
-            $escape(Dropdown::getDropdownName('glpi_entities', $data['entity'])),
+            Dropdown::getDropdownName('glpi_entities', $data['entity']),
             $num,
             $key,
         );
@@ -336,15 +338,15 @@ if ($nbtot > 0) {
             $name .= $escape($data["name"]);
         }
         $name .= "</a>";
-        echo ReportExport::showItem($output_type, $name, $num, $key);
+        echo ReportExport::showItem($output_type, $name, $num, $key, '', true);
 
-        echo ReportExport::showItem($output_type, $escape($data['firstname']), $num, $key);
-        echo ReportExport::showItem($output_type, $escape($data['registration_number']), $num, $key);
+        echo ReportExport::showItem($output_type, $data['firstname'], $num, $key);
+        echo ReportExport::showItem($output_type, $data['registration_number'], $num, $key);
 
         $link1 = Toolbox::getItemTypeFormURL(Rank::class);
         $rankName = "<a href='" . $link1 . "?id=" . (int) $data["rankID"] . "' target='_blank'>"
             . $escape($data["rankName"]) . "</a>";
-        echo ReportExport::showItem($output_type, $rankName, $num, $key);
+        echo ReportExport::showItem($output_type, $rankName, $num, $key, '', true);
 
         echo ReportExport::showItem($output_type, Html::convDate($data['date_begin']), $num, $key);
         echo ReportExport::showItem($output_type, Html::convDate($data['date_end']), $num, $key);
@@ -363,14 +365,15 @@ if ($output_type == Search::HTML_OUTPUT) {
 /**
  * Display the column title and allow the sort
  *
- * @param $output_type
- * @param $num
- * @param $title
- * @param $columnname
- * @param bool $sort
- * @return mixed
+ * @param int|string           $output_type
+ * @param int                  $num
+ * @param array<string, mixed> $criteria    parameters of the report criteria, kept by the sort link
+ * @param string               $title
+ * @param string               $columnname
+ * @param bool                 $sort
+ * @return void
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort = false)
+function showTitle($output_type, &$num, array $criteria, $title, $columnname, $sort = false)
 {
     if ($output_type != Search::HTML_OUTPUT || $sort == false) {
         echo ReportExport::showHeaderItem($output_type, $title, $num);
@@ -384,17 +387,9 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
             $order = 'DESC';
         }
     }
-    $link = PLUGIN_RESOURCES_WEBDIR . '/report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php';
-    $first = true;
-    foreach ($_REQUEST as $name => $value) {
-        if (!in_array($name, ['sort', 'order', 'PHPSESSID'])) {
-            $link .= ($first ? '?' : '&amp;');
-            $link .= $name . '=' . urlencode($value);
-            $first = false;
-        }
-    }
-    $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
-    $link .= '&amp;order=' . $order;
+    // Built from the report criteria only, never by replaying $_REQUEST: see
+    // ReportExport::getSortLink()
+    $link = ReportExport::getSortLink(PLUGIN_RESOURCES_WEBDIR . '/report/resourceemploymentwithlapserank/resourceemploymentwithlapserank.php', $criteria, $columnname, $order);
     echo ReportExport::showHeaderItem(
         $output_type,
         $title,

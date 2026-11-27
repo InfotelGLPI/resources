@@ -44,6 +44,9 @@ use Session;
  */
 class ResourceResting extends CommonDBTM
 {
+    // No entity of its own: the item rights are those of the resource
+    use ResourceChildItemRightTrait;
+
     public static string $rightname = 'plugin_resources_resting';
     public bool $dohistory = true;
 
@@ -70,17 +73,6 @@ class ResourceResting extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -127,9 +119,9 @@ class ResourceResting extends CommonDBTM
     /**
      * Prepare input datas for updating the item
      *
-     * @param $input datas used to update the item
+     * @param array $input datas used to update the item
      *
-     * @return datas modified $input array
+     * @return array modified $input array, empty when the update is refused
      **/
     public function prepareInputForUpdate($input)
     {
@@ -147,6 +139,12 @@ class ResourceResting extends CommonDBTM
 
         //unset($input['picture']);
         $this->getFromDB($input["id"]);
+
+        // The form may move the period to another resource: canUpdateItem() only answered
+        // for the one it is stored under.
+        if (!$this->canMoveToParentResource($input)) {
+            return [];
+        }
 
         $input["_old_date_begin"] = $this->fields["date_begin"];
         $input["_old_date_end"] = $this->fields["date_end"];

@@ -240,7 +240,9 @@ if ($nbtot > 0) {
         $resource = new Resource();
         $resource->getFromDB($data['resources_id']);
 
-        echo ReportExport::showItem($output_type, $resource->getLink(), $num, $key);
+        // getLink() escapes the name it prints: trusted HTML
+        echo ReportExport::showItem($output_type, $resource->getLink(), $num, $key, '', true);
+        // Location name as stored: escaped by showItem()
         echo ReportExport::showItem(
             $output_type,
             Dropdown::getDropdownName(
@@ -251,8 +253,8 @@ if ($nbtot > 0) {
             $key,
         );
         echo ReportExport::showItem($output_type, Html::convDate($data["resources_date_end"]), $num, $key);
-        // Escape raw DB habilitation labels (stored unencoded since GLPI 10+) before output.
-        echo ReportExport::showItem($output_type, implode('<br>', array_map(static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8'), $data['habilitations'])), $num, $key);
+        // One habilitation label per line: each label escaped, joined by static markup
+        echo ReportExport::showItem($output_type, implode('<br>', array_map('htmlescape', $data['habilitations'])), $num, $key, '', true);
 
         echo ReportExport::showEndLine($output_type);
     }

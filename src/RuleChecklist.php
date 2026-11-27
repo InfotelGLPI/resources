@@ -69,14 +69,14 @@ class RuleChecklist extends Rule
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
+     * The profile form offers a Create box for the rules: it is the bit tested. The core
+     * Rule::canCreate() would fall back on canUpdate().
      *
-     * @return
+     * @return bool
      **/
     public static function canCreate(): bool
     {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
+        return Session::haveRight(self::$rightname, CREATE);
     }
 
     /**

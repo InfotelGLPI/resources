@@ -56,7 +56,9 @@ if (empty($_GET["name"])) {
 }
 
 if (isset($_POST["update"])) {
-    $user->check($_POST['id'], UPDATE);
+    // The user written is the one checked: same integer for both, see
+    // Resource::getPostedId().
+    $users_id = Resource::checkPostedItem($user, $_POST['id'] ?? null, UPDATE);
     // idResource is a second identifier, uncorrelated with the user authorised above.
     // It drives the enumeration of the linked tickets and the ITILSolution::add() of
     // Resource::solveOpenTickets() below,
@@ -64,10 +66,10 @@ if (isset($_POST["update"])) {
     // validates that the parent exists and enforces no right on the ticket, so this
     // controller is the only gate on that path. Authorise it before anything is written.
     $resource = new Resource();
-    $resource->check((int) ($_POST['idResource'] ?? 0), UPDATE);
-    $user->update($_POST);
+    Resource::checkPostedItem($resource, $_POST['idResource'] ?? null, UPDATE);
+    $user->update(['id' => $users_id] + $_POST);
     Event::log(
-        $_POST['id'],
+        $users_id,
         "users",
         5,
         "setup",

@@ -35,6 +35,7 @@ use DBConnection;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Log;
 use Migration;
 use PluginPdfSimplePDF;
@@ -46,8 +47,95 @@ use Toolbox;
  */
 class ResourceHabilitation extends CommonDBTM
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait;
+    // No entity of its own: the item rights are those of the resource
+    use ResourceChildItemRightTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $dohistory = true;
+
+    public function prepareInputForAdd($input)
+    {
+        // The form, the wizard step and the template clone all come through here: the
+        // habilitation posted has to exist and be one of those of the entity of the resource
+        // (its own entity, or a parent one when the habilitation is recursive), the scope the
+        // dropdown of the form offers. post_addItem() writes its name to the history.
+        $habilitations_id = self::getAllowedHabilitationId(
+            $input['plugin_resources_habilitations_id'] ?? null,
+            $input['plugin_resources_resources_id'] ?? null,
+        );
+        if ($habilitations_id === 0) {
+            Session::addMessageAfterRedirect(__('Item not found'), false, ERROR);
+            return false;
+        }
+        $input['plugin_resources_habilitations_id'] = $habilitations_id;
+
+        return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // canUpdateItem() answered for the resource the row is stored under, not for the one
+        // an update would move it to
+        if (!$this->canMoveToParentResource($input)) {
+            return false;
+        }
+
+        // A new habilitation written on the row is checked as on creation, against the
+        // resource the row ends up under
+        if (array_key_exists('plugin_resources_habilitations_id', $input)) {
+            $habilitations_id = self::getAllowedHabilitationId(
+                $input['plugin_resources_habilitations_id'],
+                $input['plugin_resources_resources_id'] ?? $this->fields['plugin_resources_resources_id'] ?? null,
+            );
+            if ($habilitations_id === 0) {
+                Session::addMessageAfterRedirect(__('Item not found'), false, ERROR);
+                return false;
+            }
+            $input['plugin_resources_habilitations_id'] = $habilitations_id;
+        }
+
+        return $input;
+    }
+
+    /**
+     * Habilitation that may be attached to a resource.
+     *
+     * @param mixed $habilitations_id habilitation, as received
+     * @param mixed $resources_id     resource the row belongs to, as received
+     *
+     * @return int the habilitation id, 0 when it does not exist or is out of the scope of the
+     *             entity of the resource
+     */
+    public static function getAllowedHabilitationId(mixed $habilitations_id, mixed $resources_id): int
+    {
+        try {
+            $habilitations_id = Resource::getPostedId($habilitations_id);
+            $resources_id     = Resource::getPostedId($resources_id);
+        } catch (BadRequestHttpException) {
+            return 0;
+        }
+
+        $resource = new Resource();
+        if ($habilitations_id <= 0 || $resources_id <= 0 || !$resource->getFromDB($resources_id)) {
+            return 0;
+        }
+
+        $dbu   = new DbUtils();
+        $table = Habilitation::getTable();
+        $found = $dbu->countElementsInTable(
+            $table,
+            ['id' => $habilitations_id] + $dbu->getEntitiesRestrictCriteria(
+                $table,
+                '',
+                (int) $resource->fields['entities_id'],
+                true,
+            ),
+        );
+
+        return $found > 0 ? $habilitations_id : 0;
+    }
 
     /**
      * Return the localized name of the current Type
@@ -80,17 +168,6 @@ class ResourceHabilitation extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -314,44 +391,61 @@ class ResourceHabilitation extends CommonDBTM
     /**
      * Adding habilitations to the resource via the wizard
      *
-     * @param $params
+     * The habilitations of the resource are replaced: the deletion and the new rows are keyed
+     * on the single id the caller checked. It is validated here too, since an array or an
+     * operator form in the deletion criteria would reach the rows of other resources.
+     *
+     * @param array $params plugin_resources_resources_id, habilitation_<level> values
+     *
+     * @return bool
      */
     public function addResourceHabilitation($params)
     {
+        $resources_id = Resource::getPostedId($params['plugin_resources_resources_id'] ?? null);
+        if ($resources_id <= 0) {
+            return false;
+        }
+
         $habilitation_level = new HabilitationLevel();
 
         $ressourcehabilitation = new ResourceHabilitation();
-        $ressourcehabilitation->deleteByCriteria(["plugin_resources_resources_id" => $params['plugin_resources_resources_id']]);
+        $ressourcehabilitation->deleteByCriteria(["plugin_resources_resources_id" => $resources_id]);
 
         foreach ($params as $key => $val) {
-            if (strpos($key, '_') > 0) {
-                list($name, $id) = explode('_', $key);
+            // Only the habilitation_<level> fields of the form: the other keys (the resource
+            // id among them) were looked up as levels too
+            if (preg_match('/^habilitation_([0-9]+)$/', (string) $key, $matches) === 1) {
+                $id = (int) $matches[1];
                 if (is_array($val)
                     && ($habilitation_level->getFromDB($id))) {
                     foreach ($val as $v) {
-                        $this->addResourceHabilitationInDb($v, $params);
+                        $this->addResourceHabilitationInDb($v, $resources_id);
                     }
                 } elseif ($habilitation_level->getFromDB($id)) {
-                    $this->addResourceHabilitationInDb($val, $params);
+                    $this->addResourceHabilitationInDb($val, $resources_id);
                 }
             }
         }
+
+        return true;
     }
 
     /**
-     * @param $id
-     * @param $params
+     * @param mixed $id           habilitation
+     * @param int   $resources_id id of the resource the caller checked
      */
-    public function addResourceHabilitationInDb($id, $params)
+    public function addResourceHabilitationInDb($id, int $resources_id)
     {
-        $resourceHabilitation = new self();
-        $habilitation = new Habilitation();
-
-        if ($habilitation->getFromDB($id)) {
-            $input["plugin_resources_habilitations_id"] = $id;
-            $input["plugin_resources_resources_id"] = $params["plugin_resources_resources_id"];
-            $resourceHabilitation->add($input);
+        // The empty choice of a level left blank: nothing to attach, nothing to report
+        if (empty($id)) {
+            return;
         }
+        // prepareInputForAdd() checks the habilitation (existence and entity scope of the
+        // resource), the same way for the wizard as for the form
+        (new self())->add([
+            'plugin_resources_habilitations_id' => $id,
+            'plugin_resources_resources_id'     => $resources_id,
+        ]);
     }
 
     /**
@@ -365,9 +459,12 @@ class ResourceHabilitation extends CommonDBTM
      */
     public function checkRequiredFields($params = [])
     {
-
+        // The mandatory levels are those of the entity of the resource being filled
         $resource = new Resource();
-        $resource->getFromDB($params['plugin_resources_resources_id']);
+        $resources_id = Resource::getPostedId($params['plugin_resources_resources_id'] ?? null);
+        if ($resources_id <= 0 || !$resource->getFromDB($resources_id)) {
+            return false;
+        }
         $dbu = new DbUtils();
 
         $habilitation_level = new HabilitationLevel();
@@ -431,15 +528,20 @@ class ResourceHabilitation extends CommonDBTM
             'WHERE' => ['plugin_resources_resources_id' => (int) $ID],
         ]);
         $number = count($iterator);
+        // The pdf plugin writes every argument as HTML (TCPDF writeHTMLCell): only the static
+        // markup below is kept, every label and stored value is escaped.
         $pdf->setColumnsSize(100);
 
-        $pdf->displayTitle('<b>' . self::getTypeName(2) . '</b>');
+        $pdf->displayTitle('<b>' . htmlescape(self::getTypeName(2)) . '</b>');
 
         if (!$number) {
-            $pdf->displayLine(__('No results found'));
+            $pdf->displayLine(htmlescape(__('No results found')));
         } else {
             foreach ($iterator as $data) {
-                $pdf->displayLine(Dropdown::getDropdownName("glpi_plugin_resources_habilitations", $data["plugin_resources_habilitations_id"]));
+                $pdf->displayLine(htmlescape(Dropdown::getDropdownName(
+                    "glpi_plugin_resources_habilitations",
+                    $data["plugin_resources_habilitations_id"],
+                )));
             }
         }
 

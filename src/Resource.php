@@ -48,7 +48,9 @@ use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\DBAL\QueryExpression;
 use Glpi\DBAL\QueryFunction;
+use Glpi\DBAL\QuerySubQuery;
 use Glpi\Event;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Positions\Position;
 use Group_Ticket;
@@ -92,6 +94,42 @@ class Resource extends CommonDBTM
      */
     public bool $allow_validation_flag = false;
 
+    /**
+     * Columns that only server-side code may change on an existing resource.
+     *
+     * The resource and wizard forms hand the whole request to update(), and so do the massive
+     * actions: any of these columns posted along was written, which moved a resource to an
+     * entity outside the transfer workflow, or rewrote its template, trash or declaration data.
+     */
+    private const STRUCTURAL_FIELDS = [
+        'entities_id',
+        'is_recursive',
+        'is_template',
+        'is_deleted',
+        'users_id_recipient',
+        'date_declaration',
+    ];
+
+    /**
+     * Structural columns (STRUCTURAL_FIELDS) the next update() of this object may write.
+     *
+     * Set by the server-side code that legitimately changes them (transferResource(), the
+     * resource import, the resource form for the writer), never from the input. Consumed by
+     * prepareInputForUpdate().
+     *
+     * @var string[]
+     */
+    public array $allow_structural_fields = [];
+
+    /**
+     * Whether the next update() of this object may write a resource whose information is
+     * frozen by the validation (isFrozenAfterValidation()).
+     *
+     * Set by updateFromWorkflow() only, never from the input. Consumed by
+     * prepareInputForUpdate().
+     */
+    private bool $allow_frozen_update = false;
+
     public static $types = [
         Computer::class,
         Monitor::class,
@@ -130,6 +168,94 @@ class Resource extends CommonDBTM
     }
 
     /**
+     * Identifier received from a client (form field, array key, massive action key).
+     *
+     * The value a right is checked on has to be the value the operation then uses. A request
+     * value that is not a plain positive integer ("x123", "5x3", "4.0", " 7", an array...)
+     * can be read as two different ids by the check and by the operation, so it is refused
+     * here rather than cast: callers check and act on the integer returned, never on the raw
+     * value.
+     *
+     * @param mixed $value posted value
+     *
+     * @return int the id, 0 when the value is absent or empty
+     *
+     * @throws BadRequestHttpException when the value is not a canonical positive integer
+     */
+    public static function getPostedId(mixed $value): int
+    {
+        // Absent, or the empty choice of a dropdown
+        if ($value === null || $value === '' || $value === 0 || $value === '0') {
+            return 0;
+        }
+        if (is_int($value) && $value > 0) {
+            return $value;
+        }
+        // Digits only, no leading zero; filter_var() refuses what overflows an int
+        if (is_string($value) && preg_match('/^[1-9][0-9]*$/', $value) === 1) {
+            $id = filter_var($value, FILTER_VALIDATE_INT);
+            if (is_int($id)) {
+                return $id;
+            }
+        }
+
+        throw new BadRequestHttpException();
+    }
+
+    /**
+     * check() on an existing item designated by a posted id.
+     *
+     * The id is refused unless it is a plain positive integer: on 0, check() would only test
+     * the right to create an item, whatever right was asked for. $item is left loaded with the
+     * row checked, and the id returned is the one the caller may go on with.
+     *
+     * @param CommonDBTM $item  instance of the itemtype designated
+     * @param mixed      $id    id posted
+     * @param int        $right right to require on the item
+     *
+     * @return int id of the item checked
+     */
+    public static function checkPostedItem(CommonDBTM $item, mixed $id, int $right): int
+    {
+        $items_id = self::getPostedId($id);
+        if ($items_id <= 0) {
+            throw new BadRequestHttpException();
+        }
+        $item->check($items_id, $right);
+
+        return $items_id;
+    }
+
+    /**
+     * Keep the massive action keys that are canonical ids, report the other ones as failed.
+     *
+     * The massive action engine passes the posted keys through untouched: each handler checks
+     * one of them with can() and then writes with it, so both have to be the same integer.
+     *
+     * @param array<int|string, mixed> $ids keys posted to the massive action
+     *
+     * @return array<int, mixed> the valid keys, as integers
+     */
+    public static function getMassiveActionIds(MassiveAction $ma, CommonDBTM $item, array $ids): array
+    {
+        $valid = [];
+        foreach ($ids as $key => $val) {
+            try {
+                $id = self::getPostedId($key);
+            } catch (BadRequestHttpException) {
+                $id = 0;
+            }
+            if ($id > 0) {
+                $valid[$id] = $val;
+            } else {
+                $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+            }
+        }
+
+        return $valid;
+    }
+
+    /**
      * Guard a mutation performed on a row owned by a Resource.
      *
      * Several child itemtypes of this plugin (LinkAd, ResourceHabilitation,
@@ -140,13 +266,17 @@ class Resource extends CommonDBTM
      * a user of entity A mutate rows belonging to entity B. The boundary only exists on
      * the owning Resource, so it has to be checked there.
      *
-     * @param int|string $resources_id id of the owning Resource
-     * @param int        $right        right to require on that Resource
+     * An existing Resource is required: on id 0, check() would only test the right to create
+     * one. The id returned is the one checked, the only one the caller may go on with.
+     *
+     * @param mixed $resources_id id of the owning Resource, as posted
+     * @param int   $right        right to require on that Resource
+     *
+     * @return int id of the Resource checked
      */
-    public static function checkOwnership($resources_id, int $right = UPDATE): void
+    public static function checkOwnership(mixed $resources_id, int $right = UPDATE): int
     {
-        $resource = new self();
-        $resource->check((int) $resources_id, $right);
+        return self::checkPostedItem(new self(), $resources_id, $right);
     }
 
     /**
@@ -157,17 +287,178 @@ class Resource extends CommonDBTM
      * the posted parent would let a caller pass a Resource they own while naming a child
      * id belonging to another one (identifier substitution).
      *
+     * $child is left loaded with the row checked. The id returned is the one of that row,
+     * the only one the caller may go on with.
+     *
      * @param CommonDBTM $child    empty instance of the child itemtype
-     * @param int|string $child_id id of the child row being mutated
+     * @param mixed      $child_id id of the child row being mutated, as posted
      * @param int        $right    right to require on the owning Resource
+     *
+     * @return int id of the child row checked
      */
-    public static function checkChildOwnership(CommonDBTM $child, $child_id, int $right = UPDATE): void
+    public static function checkChildOwnership(CommonDBTM $child, mixed $child_id, int $right = UPDATE): int
     {
-        if (!$child->getFromDB((int) $child_id)) {
+        $id = self::getPostedId($child_id);
+        if ($id <= 0 || !$child->getFromDB($id)) {
             throw new BadRequestHttpException();
         }
 
         self::checkOwnership($child->fields['plugin_resources_resources_id'] ?? 0, $right);
+
+        return $id;
+    }
+
+    /**
+     * Whether a row may be attached to the resource named by an input.
+     *
+     * Attaching a row (employment, period, habilitation...) to a resource changes that
+     * resource: UPDATE is required on it, entity included. The check made on the row itself
+     * says nothing about the resource it is being moved to. Keeping the current resource, or
+     * attaching to none, requires nothing more.
+     *
+     * @param mixed $resources_id resource named by the input, as received
+     * @param int   $current_id   resource the row is attached to now, 0 for a new row
+     *
+     * @return bool
+     */
+    public static function canAttachTo(mixed $resources_id, int $current_id = 0): bool
+    {
+        try {
+            $id = self::getPostedId($resources_id);
+        } catch (BadRequestHttpException) {
+            return false;
+        }
+
+        return $id === 0 || $id === $current_id || (new self())->can($id, UPDATE);
+    }
+
+    /**
+     * Template a resource may be created from.
+     *
+     * The template data, and in post_addItem() its child rows, end up in the new resource:
+     * only an actual template the session may read qualifies, never a plain resource nor one
+     * out of the session's entities.
+     *
+     * @param int $templates_id id of the template, as checked by the caller
+     *
+     * @return self|null the template, loaded, or null when it does not qualify
+     */
+    public static function getAllowedTemplate(int $templates_id): ?self
+    {
+        $template = new self();
+        if ($templates_id <= 0
+            || !$template->getFromDB($templates_id)
+            || (int) $template->fields['is_template'] !== 1
+            || !$template->can($templates_id, READ)) {
+            return null;
+        }
+
+        return $template;
+    }
+
+    /**
+     * Whether the session may choose the writer (users_id_recipient) of a resource.
+     *
+     * The resource form only offers the field to those who may declare resources, in the
+     * central interface: its update branch lets the update write it on the same test.
+     *
+     * @return bool
+     */
+    public static function canSetRecipient(): bool
+    {
+        return self::canCreate() && Session::getCurrentInterface() == 'central';
+    }
+
+    /**
+     * Refuse a write on this resource once its information is frozen by the validation.
+     *
+     * The frozen form only hides its buttons: every server-side path that writes the resource
+     * from its form or from the wizard replays the test through this method.
+     *
+     * @return void
+     *
+     * @throws AccessDeniedHttpException
+     */
+    public function checkNotFrozen(): void
+    {
+        if ($this->isFrozenAfterValidation()) {
+            throw new AccessDeniedHttpException();
+        }
+    }
+
+    /**
+     * update() made by a workflow meant to change a resource after its validation.
+     *
+     * Once the information of a resource is validated and frozen, prepareInputForUpdate()
+     * refuses to write it: the forms were the only writers to test the freeze, and the generic
+     * entry points of the core (the "Update" and "Amend comment" massive actions, the legacy
+     * API) went around it. The changes the plugin makes on purpose afterwards (change actions,
+     * leaving, transfer, import, scheduled state changes, synchronization of the location) go
+     * through this method.
+     *
+     * @param array<string, mixed> $input input of update()
+     *
+     * @return bool
+     */
+    public function updateFromWorkflow(array $input): bool
+    {
+        $this->allow_frozen_update = true;
+        try {
+            return $this->update($input);
+        } finally {
+            $this->allow_frozen_update = false;
+        }
+    }
+
+    /**
+     * Whether the session may synchronize this resource with the directory.
+     *
+     * Same condition as the synchronization side of the validation tab (defineTabs()): the
+     * validation module is on, the direct manager validated the information, and the active
+     * profile is one of those allowed to synchronize.
+     *
+     * @return bool
+     */
+    public function canSynchronizeAD(): bool
+    {
+        $config = new Config();
+        if (empty($config->fields['use_module_validation'])
+            || empty($this->fields['valid_resource_information'])) {
+            return false;
+        }
+
+        $profiles = json_decode((string) ($config->fields['can_view_synchronisationAD'] ?? ''));
+
+        return is_array($profiles)
+            && in_array($_SESSION['glpiactiveprofile']['id'] ?? 0, $profiles);
+    }
+
+    /**
+     * Delete the child rows left behind by resources purged before cleanDBonPurge() covered
+     * their table: directory links, leaving information and imported values.
+     *
+     * Such a row was adopted by whatever resource got the id of the purged one afterwards.
+     * Idempotent, run by the install and update of the plugin.
+     *
+     * @return void
+     */
+    public static function deleteOrphanChildRows(): void
+    {
+        global $DB;
+
+        foreach ([LinkAd::getTable(), LeavingInformation::getTable(), ResourceImport::getTable()] as $table) {
+            if (!$DB->tableExists($table)) {
+                continue;
+            }
+            $DB->delete($table, [
+                'NOT' => [
+                    'plugin_resources_resources_id' => new QuerySubQuery([
+                        'SELECT' => 'id',
+                        'FROM'   => self::getTable(),
+                    ]),
+                ],
+            ]);
+        }
     }
 
     /**
@@ -355,6 +646,17 @@ class Resource extends CommonDBTM
 
         $temp = new ResourceHabilitation();
         $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
+
+        // These rows used to survive the purge: a resource created later with the same id
+        // adopted them, the directory account named by the link included.
+        $temp = new LinkAd();
+        $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
+
+        $temp = new LeavingInformation();
+        $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
+
+        $temp = new ResourceImport();
+        $temp->deleteByCriteria(['plugin_resources_resources_id' => $this->fields['id']]);
     }
 
     /**
@@ -435,7 +737,8 @@ class Resource extends CommonDBTM
             $input["is_leaving"] = "0";
             $input["date_declaration_leaving"] = null;
         }
-        $this->update($input);
+        // The leaving is declared after the validation of the arrival information
+        $this->updateFromWorkflow($input);
 
         LeavingInformation::saveForResource($resources_id, $post);
 
@@ -451,13 +754,7 @@ class Resource extends CommonDBTM
             $this->createLeavingTicket($input["date_end"], (int) $input["plugin_resources_leavingreasons_id"]);
 
             // The directory has to be updated again for this departure.
-            $linkad = new LinkAd();
-            if ($linkad->getFromDBByCrit(["plugin_resources_resources_id" => $resources_id])) {
-                $linkad->update([
-                    'id' => $linkad->getID(),
-                    'action_done' => 0,
-                ]);
-            }
+            LinkAd::setActionDoneForResource($resources_id, false);
         }
 
         if ($config->fields["create_ticket_departure_instructions"]
@@ -1197,11 +1494,12 @@ class Resource extends CommonDBTM
         }
 
         $this->addStandardTab(Choice::class, $ong, $options);
-        $canViewSynchroADView = json_decode($config->fields['can_view_synchronisationAD']);
-        $canViewSynchroADView = is_array($canViewSynchroADView) ? $canViewSynchroADView : [];
 
-        if ($config->fields['use_module_validation'] && ((!$this->fields['valid_resource_information'] && Session::getLoginUserID() == $this->fields['users_id']) ||
-            ($this->fields['valid_resource_information'] && in_array($_SESSION['glpiactiveprofile']['id'], $canViewSynchroADView)))
+        // The tab serves the direct manager while the information awaits validation, then the
+        // profiles allowed to synchronize it: canSynchronizeAD() is shared with the controller.
+        if ($config->fields['use_module_validation']
+            && ((!$this->fields['valid_resource_information'] && Session::getLoginUserID() == $this->fields['users_id'])
+                || $this->canSynchronizeAD())
         ) {
             $this->addStandardTab(Resource_Validation::class, $ong, $options);
         }
@@ -1311,8 +1609,6 @@ class Resource extends CommonDBTM
             $fields = [];
             $fields = $rulecollection->processAllRules($input, $fields, []);
 
-            $rank = new Rank();
-
             $field = [];
 
             foreach ($fields as $key => $val) {
@@ -1330,7 +1626,7 @@ class Resource extends CommonDBTM
                         || $input[$val] == "NULL"
                     ) {
                         if (isset($input['more_information'])) {
-                            if (!$rank->canCreate()
+                            if (!Rank::canFillPublicSectorFields()
                                 && !in_array(
                                     $val,
                                     [
@@ -1357,7 +1653,7 @@ class Resource extends CommonDBTM
                                 $need[] = $val;
                             }
                         } else {
-                            if ((!$rank->canCreate()
+                            if ((!Rank::canFillPublicSectorFields()
                                     && in_array(
                                         $val,
                                         [
@@ -1422,6 +1718,22 @@ class Resource extends CommonDBTM
      **/
     public function prepareInputForAdd($input)
     {
+        // The primary key is never the caller's choice: a posted id was inserted as is, which
+        // let a creator take the id of a purged resource (and adopt the rows it left behind)
+        // or push the AUTO_INCREMENT to its limit. The central form creating a resource from a
+        // template (withtemplate=2) posts the id of the template there: it may only name the
+        // source of the clone, checked below.
+        $posted_id = $input['id'] ?? null;
+        unset($input['id']);
+
+        // Same rule as an update: the validation flag belongs to the validation workflow.
+        $input = $this->filterValidationFlag($input);
+
+        // post_addItem() clones the child rows of the template the resource is created from.
+        // Its id is only ever set below, after the template has been checked: a value posted
+        // under the former key or under the internal one is dropped.
+        unset($input['resources_oldID'], $input['_resources_template_id']);
+
         if (!isset($input["is_template"])) {
             if (!isset($input['force'])) {
                 $required = $this->checkRequiredFields($input);
@@ -1477,15 +1789,67 @@ class Resource extends CommonDBTM
             }
         }
 
-        $template_resources = new Resource();
-        if (isset($this->input['id_template'])) {
-            if ($template_resources->getFromDBByCrit([
-                'id' => $this->input['id_template'],
-                'is_template' => 1,
-            ])) {
-                $input["resources_oldID"] = $this->input['id_template'];
+        // Source of the clone, see getTemplateSourceId()
+        $templates_id = self::getTemplateSourceId(['id' => $posted_id] + $input);
+        if ($templates_id > 0) {
+            $input['_resources_template_id'] = $templates_id;
+        }
+
+        return $input;
+    }
+
+    /**
+     * Template a resource created from an input is cloned from (post_addItem()).
+     *
+     * A plain id naming an actual template the session may read (same rule as the wizard).
+     * Nothing else is cloned, neither a resource nor a template of an entity out of reach, nor
+     * a list of ids. id_template comes first (the wizard); otherwise the id posted by the
+     * central form, when it names such a template (any other id is ignored).
+     *
+     * The forms writing the employer next to the resource resolve the template the same way
+     * (Employee::getEmployerWrite()): the row cloned from it is the reference of the employer.
+     *
+     * @param array<string, mixed> $input input of add(), as posted
+     *
+     * @return int id of the template, 0 for none
+     */
+    public static function getTemplateSourceId(array $input): int
+    {
+        foreach ([$input['id_template'] ?? null, $input['id'] ?? null] as $candidate) {
+            if ($candidate === null) {
+                continue;
+            }
+            try {
+                $templates_id = self::getPostedId($candidate);
+            } catch (BadRequestHttpException) {
+                $templates_id = 0;
+            }
+            $template = self::getAllowedTemplate($templates_id);
+            if ($template !== null) {
+                return $template->getID();
             }
         }
+
+        return 0;
+    }
+
+    /**
+     * Drop the manager validation flag from an input, unless the validation workflow set
+     * allow_validation_flag.
+     *
+     * The workflow is recognized through a server-side property, never through the input,
+     * which comes straight from $_POST in the resource and wizard forms.
+     *
+     * @param array<string, mixed> $input
+     *
+     * @return array<string, mixed>
+     */
+    private function filterValidationFlag(array $input): array
+    {
+        if (!$this->allow_validation_flag) {
+            unset($input['valid_resource_information']);
+        }
+        unset($input['_from_validation_workflow']);
 
         return $input;
     }
@@ -1506,22 +1870,24 @@ class Resource extends CommonDBTM
         //      }
         //       Manage add from template
 
-        if (isset($this->input["resources_oldID"])) {
+        // Set by prepareInputForAdd() only, once the template has been checked
+        $templates_id = (int) ($this->input['_resources_template_id'] ?? 0);
+        if ($templates_id > 0) {
             // ADD choices
-            Choice::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+            Choice::cloneItem($templates_id, $this->fields['id']);
 
             // ADD habilitations
-            ResourceHabilitation::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+            ResourceHabilitation::cloneItem($templates_id, $this->fields['id']);
 
             // ADD items
-            Resource_Item::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+            Resource_Item::cloneItem($templates_id, $this->fields['id']);
 
             // ADD reports
-            ReportConfig::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+            ReportConfig::cloneItem($templates_id, $this->fields['id']);
 
             //manage template from helpdesk (no employee to add : resource.form.php)
             if (!isset($this->input["add_from_helpdesk"])) {
-                Employee::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+                Employee::cloneItem($templates_id, $this->fields['id']);
             }
             // ADD Documents
             $document_items = Document_Item::getItemsAssociatedTo($this->getType(), $this->fields['id']);
@@ -1531,7 +1897,7 @@ class Resource extends CommonDBTM
             }
 
             // ADD tasks
-            Task::cloneItem($this->input["resources_oldID"], $this->fields['id']);
+            Task::cloneItem($templates_id, $this->fields['id']);
         }
 
         //ADD Checklists from rules
@@ -1719,20 +2085,56 @@ class Resource extends CommonDBTM
     /**
      * Prepare input datas for updating the item
      *
-     * @param $input datas used to update the item
+     * @param array<string, mixed> $input datas used to update the item
      *
-     * @return the modified $input array
+     * @return array<string, mixed>|false the modified $input array, false to refuse the update
      **/
     public function prepareInputForUpdate($input)
     {
         // The validation flag belongs to the validation workflow (ajax/validinformation.php,
-        // manager only, once only): an ordinary update must not set or reset it. The workflow
-        // is recognized through a server-side property, never through the input, which comes
-        // straight from $_POST in the resource and wizard forms.
-        if (!$this->allow_validation_flag) {
-            unset($input['valid_resource_information']);
+        // manager only, once only): an ordinary update must not set or reset it.
+        $input = $this->filterValidationFlag($input);
+
+        // Structural columns: only the server-side code that changes them on purpose lists
+        // them in allow_structural_fields (the entity through transferResource(), which checks
+        // the destination, the writer through the resource form that offers it). The wizard,
+        // for one, posts the current user and date as writer and declaration date of the
+        // resource it edits. The list is consumed here, so that it never outlives the write it
+        // was set for.
+        $allowed = $this->allow_structural_fields;
+        $this->allow_structural_fields = [];
+        foreach (self::STRUCTURAL_FIELDS as $field) {
+            if (!in_array($field, $allowed, true)) {
+                unset($input[$field]);
+            }
         }
-        unset($input['_from_validation_workflow']);
+
+        // Validated information is frozen: the forms test it before saving (checkNotFrozen()),
+        // but the generic entry points of the core write through update() alone, the "Update"
+        // and "Amend comment" massive actions (run on a forged request without the core
+        // checking they were offered) and the legacy API. Every writer comes through here: a
+        // write of a column, or of the picture, is refused unless it comes from a workflow
+        // meant to change a validated resource (updateFromWorkflow()). The flag is consumed
+        // here, like the list above. update() loaded the stored row before calling this method.
+        $allow_frozen = $this->allow_frozen_update;
+        $this->allow_frozen_update = false;
+        if (!$allow_frozen && $this->isFrozenAfterValidation()) {
+            $writes = self::getUploadedPicturePath($input) !== '';
+            foreach (array_keys($input) as $key) {
+                if ($key !== 'id' && array_key_exists($key, $this->fields)) {
+                    $writes = true;
+                    break;
+                }
+            }
+            if ($writes) {
+                Session::addMessageAfterRedirect(
+                    __("You don't have permission to perform this action."),
+                    false,
+                    ERROR,
+                );
+                return false;
+            }
+        }
 
         if (isset($input['date_begin'])
             && empty($input['date_begin'])
@@ -2155,14 +2557,18 @@ class Resource extends CommonDBTM
             }
         }
 
-        // The employer is not a resource column: it is carried by the Employee relation.
+        // The employer is not a resource column: it is carried by the Employee relation. On a
+        // creation from a template (withtemplate=2), the row is the one of the template, which
+        // the new resource gets a copy of: posted back unchanged, it writes nothing
+        // (Employee::getEmployerWrite()).
         $employers_id      = 0;
+        $employer_readonly = false;
         $can_read_employee = Session::haveRight(Profile::RIGHT_EMPLOYEE_CORE_FORM, READ) && !$display_employee;
         if ($can_read_employee) {
-            $employee = new Employee();
-            if ($employee->getFromDBByCrit(['plugin_resources_resources_id' => $this->getID()])) {
-                $employers_id = $employee->fields['plugin_resources_employers_id'];
-            }
+            $employers_id = Employee::getEmployerOf((int) $this->getID());
+            // A change the Employee right of the session does not allow would only end on an
+            // access denied page, losing the rest of the form: the field is shown read-only.
+            $employer_readonly = !Employee::canChangeEmployer($withtemplate == 2 ? 0 : (int) $this->getID());
         }
 
         $use_secondary_services = $config->useSecondaryService() && $config->useServiceDepartmentAD();
@@ -2280,7 +2686,7 @@ class Resource extends CommonDBTM
             'quota_value'                => Html::formatNumber($this->fields["quota"], true, 4),
             'can_view_rank'              => $can_view_rank,
             'can_read_employee'          => $can_read_employee,
-            'can_set_recipient'          => $this->canCreate() && $is_central,
+            'can_set_recipient'          => self::canSetRecipient(),
             'second_matricule'           => $second_matricule,
             'use_security'               => (bool) $config->useSecurity(),
             'use_services_deparments_ad' => (bool) $config->useServiceDepartmentAD(),
@@ -2289,6 +2695,7 @@ class Resource extends CommonDBTM
             'secondary_values'           => $secondary_values,
             'condition_emp'              => $condition_emp,
             'employers_id'               => $employers_id,
+            'employer_readonly'          => $employer_readonly,
             'resource_managers'          => $resource_managers,
             'sales_managers'             => $sales_managers,
             'has_leavingreasons'         => countDistinctElementsInTable(LeavingReason::getTable(), 'id') > 0,
@@ -2484,15 +2891,18 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * @param $options
+     * Send the report notifications of this resource.
+     *
+     * Works on the resource the caller loaded and authorised: reading an id from the request
+     * here would let it differ from the one checked.
      *
      * @return bool
      */
-    public function sendReport($options)
+    public function sendReport(): bool
     {
         global $CFG_GLPI;
 
-        if (!$this->getFromDB($options["id"])) {
+        if ($this->isNewItem()) {
             return false;
         }
 
@@ -2504,40 +2914,44 @@ class Resource extends CommonDBTM
             if (!$report->getFromDBByResource($this->getID())) {
                 return false;
             }
-            $options["reports_id"] = $report->getID();
+            $reports_id = $report->getID();
 
             if ($report->fields['send_report_notif']) {
                 $notification = new Notification();
                 $notification->add([
                     'users_id' => Session::getLoginUserID(),
-                    'plugin_resources_resources_id' => $options["id"],
+                    'plugin_resources_resources_id' => $this->getID(),
                     'type' => 'report',
                 ]);
-                NotificationEvent::raiseEvent('report', $this, ['reports_id' => $options["reports_id"]]);
+                NotificationEvent::raiseEvent('report', $this, ['reports_id' => $reports_id]);
             }
 
             if ($report->fields['send_other_notif']) {
                 $notification = new Notification();
                 $notification->add([
                     'users_id' => Session::getLoginUserID(),
-                    'plugin_resources_resources_id' => $options["id"],
+                    'plugin_resources_resources_id' => $this->getID(),
                     'type' => 'other',
                 ]);
-                NotificationEvent::raiseEvent('other', $this, ['reports_id' => $options["reports_id"]]);
+                NotificationEvent::raiseEvent('other', $this, ['reports_id' => $reports_id]);
             }
         }
+
+        return true;
     }
 
     /**
-     * @param $options
+     * Raise the creation notification of this resource again.
+     *
+     * Works on the resource the caller loaded and authorised, see sendReport().
      *
      * @return bool
      */
-    public function reSendResourceCreation($options)
+    public function reSendResourceCreation(): bool
     {
         global $CFG_GLPI;
 
-        if (!$this->getFromDB($options["id"])) {
+        if ($this->isNewItem()) {
             return false;
         }
 
@@ -2545,6 +2959,8 @@ class Resource extends CommonDBTM
             $status = "new";
             NotificationEvent::raiseEvent($status, $this);
         }
+
+        return true;
     }
 
     /**
@@ -2798,7 +3214,6 @@ class Resource extends CommonDBTM
         $params['comments'] = false;
         $params['entity'] = $_SESSION['glpiactive_entity'];
         $params['name'] = 'plugin_resources_resources_id';
-        $params['addUnlinkedUsers'] = false;
         $params['rand'] = mt_rand();
         $params['display'] = false;
         $params['showHabilitations'] = false;
@@ -2809,10 +3224,16 @@ class Resource extends CommonDBTM
         }
 
         $params['value2'] = $params['value'];
-        $user = self::getResourceName($params['value'], 2);
+        // The preselected value may come from the request (employment, holiday, resting
+        // forms...): the identity card of the resource, name and tooltip, is only built for a
+        // resource the session may read. Any other value is shown as its id.
+        $value_id = (int) $params['value'];
+        $value_readable = $value_id > 0 && (new self())->can($value_id, READ);
+        $user = $value_readable
+            ? self::getResourceName($value_id, 2)
+            : ['name' => '', 'link' => '', 'comment' => ''];
         if (!empty($params['value'])) {
-            //         $params['valuename'] = Dropdown::getDropdownName(self::getTable(), $params['value']);
-            $params['valuename'] = $user['name'];
+            $params['valuename'] = $value_readable ? $user['name'] : '(' . $value_id . ')';
         }
 
         $field_id = Html::cleanId("dropdown_" . $params['name'] . $params['rand']);
@@ -2826,12 +3247,11 @@ class Resource extends CommonDBTM
             $params,
         );
         if (class_exists(Position::class)) {
-            $output .= Position::showGeolocLink(Resource::class, $params['value']);
+            $output .= Position::showGeolocLink(Resource::class, $value_readable ? $value_id : 0);
         }
         // Display comment
         if ($params['customcomments']) {
             $table = $item->getTable();
-            $user = self::getResourceName($params['value'], 2);
 
             $comment_id = Html::cleanId("comment_" . $params['name'] . $params['rand']);
             $link_id = Html::cleanId("comment_link_" . $params['name'] . $params['rand']);
@@ -2936,14 +3356,18 @@ class Resource extends CommonDBTM
     {
         global $DB;
 
-        $params['plugin_resources_contracttypes_id'] = 0;
-        $params['plugin_resources_departments_id'] = 0;
-        $params['users_id_recipient'] = 0;
-        $params['itemtype'] = 'User';
-        $params['entities_id'] = $_SESSION['glpiactive_entity'];
-
-        foreach ($options as $key => $val) {
-            $params[$key] = $val;
+        // Only the fields of the sub form (fastResourceAddForm()) are read from the posted
+        // massive action input. The entity, in particular, is the active one: add() writes the
+        // entity it is given without checking it, and the posted one used to land as is.
+        $params = [
+            'plugin_resources_contracttypes_id' => 0,
+            'plugin_resources_departments_id'   => 0,
+            'users_id_recipient'                => 0,
+        ];
+        foreach (array_keys($params) as $key) {
+            if (isset($options[$key])) {
+                $params[$key] = (int) $options[$key];
+            }
         }
 
         $message = null;
@@ -2969,58 +3393,52 @@ class Resource extends CommonDBTM
             ]);
 
             if (!isset($resource->fields['id']) || $resource->fields['id'] <= 0) {
-                $resource->fields['entities_id'] = $params['entities_id'];
-                $resource->fields['name'] = $user->fields['realname'] ?? '';
-                $resource->fields['firstname'] = $user->fields['firstname'] ?? '';
+                $input = [
+                    'entities_id'                              => (int) $_SESSION['glpiactive_entity'],
+                    'name'                                     => $user->fields['realname'] ?? '',
+                    'firstname'                                => $user->fields['firstname'] ?? '',
+                    'plugin_resources_contracttypes_id'        => $params['plugin_resources_contracttypes_id'],
+                    'users_id_recipient'                       => Session::getLoginUserID(),
+                    'users_id'                                 => $params['users_id_recipient'],
+                    'users_id_sales'                           => 0,
+                    'date_declaration'                         => date('Y-m-d'),
+                    'date_begin'                               => null,
+                    'date_end'                                 => null,
+                    'plugin_resources_departments_id'          => $params['plugin_resources_departments_id'],
+                    'locations_id'                             => 0,
+                    'is_leaving'                               => 0,
+                    'users_id_recipient_leaving'               => 0,
+                    'comment'                                  => '',
+                    // Set: prepareInputForAdd() skips the mandatory fields of the forms
+                    'is_template'                              => 0,
+                    'template_name'                            => '',
+                    'is_deleted'                               => 0,
+                    'is_helpdesk_visible'                      => 1,
+                    'plugin_resources_resourcestates_id'       => 0,
+                    'is_recursive'                             => 0,
+                    'quota'                                    => 1,
+                    'plugin_resources_resourcesituations_id'   => 0,
+                    'plugin_resources_contractnatures_id'      => 0,
+                    'plugin_resources_ranks_id'                => 0,
+                    'plugin_resources_resourcespecialities_id' => 0,
+                    'plugin_resources_leavingreasons_id'       => 0,
+                    'sensitize_security'                       => 0,
+                    'read_chart'                               => 0,
+                ];
 
-                $resource->fields['plugin_resources_contracttypes_id'] = $params['plugin_resources_contracttypes_id'];
-                $resource->fields['users_id_recipient'] = Session::getLoginUserID();
-                $resource->fields['users_id'] = $params["users_id_recipient"];
-                $resource->fields['users_id_sales'] = 0;
-
-                $resource->fields['date_declaration'] = date('Y-m-d');
-                $resource->fields['date_begin'] = null;
-                $resource->fields['date_end'] = null;
-
-                $resource->fields['plugin_resources_departments_id'] = $params['plugin_resources_departments_id'];
-                $resource->fields['locations_id'] = 0;
-                $resource->fields['is_leaving'] = 0;
-                $resource->fields['users_id_recipient_leaving'] = 0;
-                $resource->fields['comment'] = '';
-                $resource->fields['notepad'] = '';
-                $resource->fields['is_template'] = 0;
-                $resource->fields['template_name'] = '';
-                $resource->fields['is_deleted'] = 0;
-                $resource->fields['is_helpdesk_visible'] = 1;
-                $resource->fields['date_mod'] = date('Y-m-d');
-
-                $resource->fields['plugin_resources_resourcestates_id'] = 0;
-                $resource->fields['picture'] = null;
-                $resource->fields['is_recursive'] = 0;
-                $resource->fields['quota'] = 1;
-                $resource->fields['plugin_resources_resourcesituations_id'] = 0;
-                $resource->fields['plugin_resources_contractnatures_id'] = 0;
-                $resource->fields['plugin_resources_ranks_id'] = 0;
-                $resource->fields['plugin_resources_resourcespecialities_id'] = 0;
-                $resource->fields['plugin_resources_leavingreasons_id'] = 0;
-                $resource->fields['sensitize_security'] = 0;
-                $resource->fields['read_chart'] = 0;
-
-                $resourceItem = new Resource_Item();
-                if ($resourceItem->can(-1, UPDATE, $resource)) {
-                    $idResource = $resource->add($resource->fields);
+                // A resource is created: CREATE on resources, in the entity of the input. The
+                // former test, Resource_Item::can() handed the Resource object as its input,
+                // was a TypeError (can() takes an array), ending the action on an error.
+                if ($resource->can(-1, CREATE, $input)) {
+                    $idResource = $resource->add($input);
                     if ($idResource) {
-                        $resource->fields['id'] = $idResource;
-                        if (isset($resourceItem->fields['id'])) {
-                            unset($resourceItem->fields['id']);
-                        }
-
-                        $resourceItem->fields['plugin_resources_resources_id'] = $idResource;
-                        $resourceItem->fields['items_id'] = $user->fields['id'];
-                        $resourceItem->fields['itemtype'] = $params['itemtype'];
-                        $resourceItem->fields['comment'] = null;
-
-                        $idResourceItem = $resourceItem->add($resourceItem->fields);
+                        // The caller checked that the session may read this user
+                        $resourceItem = new Resource_Item();
+                        $idResourceItem = $resourceItem->add([
+                            'plugin_resources_resources_id' => $idResource,
+                            'items_id'                      => $user->getID(),
+                            'itemtype'                      => \User::class,
+                        ]);
                         if ($idResourceItem) {
                             // Cochage des checklist en mode "JOB DONE"
                             $pChecklist = new Checklist();
@@ -3035,7 +3453,7 @@ class Resource extends CommonDBTM
                         } else {
                             $error['error'] = 1;
                             $message = $user_label;
-                            $resource->delete($resource->fields, 1);
+                            $resource->delete(['id' => $idResource], 1);
                         }
                     } else {
                         $error['error'] = 1;
@@ -3405,19 +3823,9 @@ class Resource extends CommonDBTM
             'entity'    => $_SESSION['glpiactiveentities'],
         ]);
 
-        // Only offer the actions granted to the current profile.
-        $actions       = Resource_Change::getAllActions();
-        $actionProfile = new Actionprofile();
-        if ($actionProfile->getFromDBByCrit(['profiles_id' => $_SESSION['glpiactiveprofile']['id']])) {
-            $available_action = json_decode($actionProfile->fields['actions_id']);
-            if (!empty($available_action)) {
-                foreach ($actions as $id => $action) {
-                    if (!in_array($id, $available_action)) {
-                        unset($actions[$id]);
-                    }
-                }
-            }
-        }
+        // Only offer the actions granted to the current profile, the list the form handler
+        // checks the posted action against.
+        $actions = [0 => Dropdown::EMPTY_VALUE] + Resource_Change::getAllowedActions();
 
         $action_dropdown = (string) Dropdown::showFromArray('change_action', $actions, [
             'display' => false,
@@ -3625,11 +4033,27 @@ class Resource extends CommonDBTM
         $resource = new Resource();
         $itemtype = $ma->getItemtype(false);
 
+        // Every branch checks a key with can() and then writes or reads with it: only keys
+        // that are plain ids go on, so that both use the same integer.
+        $ids = self::getMassiveActionIds($ma, $item, $ids);
+        if ($ids === []) {
+            return;
+        }
+
         // Every branch below that links or unlinks an item reads the itemtype from the
         // posted form and hands it to Resource_Item. Validate the value against the types
         // the plugin actually exposes, the way ajax/linkItems.php does: the per-item can()
         // answers for the resource, never for the class named alongside it.
         $link_itemtype = (string) ($input['itemtype'] ?? '');
+        // On the lists of the linked types, the ids processed are those of the list's type, the
+        // one the per-item can() below answers for: the link is stored under that type, never
+        // under the itemtype posted by the sub form, which designated another object with the
+        // same id (a user instead of a computer).
+        if ($ma->getAction() === 'plugin_resources_add_item') {
+            $link_itemtype = $item->getType();
+        } elseif ($ma->getAction() === 'plugin_resources_generate_resources') {
+            $link_itemtype = \User::class;
+        }
         $link_actions = ['Install', 'Desinstall', 'plugin_resources_add_item', 'plugin_resources_generate_resources'];
         if (in_array($ma->getAction(), $link_actions, true)
             && !in_array($link_itemtype, self::getTypes(true), true)) {
@@ -3675,6 +4099,15 @@ class Resource extends CommonDBTM
         switch ($ma->getAction()) {
             case "Transfert":
                 if ($itemtype == Resource::class) {
+                    // getSpecificMassiveActions() only offers the action with the transfer
+                    // right, in multi-entity mode: the core endpoint runs any posted action, so
+                    // the same test has to stand here.
+                    if (!Session::haveRight(\Transfer::$rightname, READ)
+                        || !Session::isMultiEntitiesMode()) {
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                        break;
+                    }
                     // The destination entity is posted with the form and nothing below validates
                     // it: without this test the action moved resources into any entity of the
                     // instance. The per-item check that follows scopes the source side, which
@@ -3691,7 +4124,7 @@ class Resource extends CommonDBTM
                             $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
                             continue;
                         }
-                        if ($item->transferResource($key, $entities_id)) {
+                        if ($item->transferResource($item->getID(), $entities_id)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3704,7 +4137,7 @@ class Resource extends CommonDBTM
                 foreach ($ids as $key => $val) {
                     if ($item->can($key, UPDATE)) {
                         $values = [
-                            'plugin_resources_resources_id' => $key,
+                            'plugin_resources_resources_id' => $item->getID(),
                             'items_id' => $link_items_id,
                             'itemtype' => $link_itemtype,
                         ];
@@ -3730,7 +4163,7 @@ class Resource extends CommonDBTM
                         $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
                         continue;
                     }
-                    if ($resource_item->deleteItemByResourcesAndItem($key, $link_items_id, $link_itemtype)) {
+                    if ($resource_item->deleteItemByResourcesAndItem($item->getID(), $link_items_id, $link_itemtype)) {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                     } else {
                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3765,7 +4198,7 @@ class Resource extends CommonDBTM
                         // output.
                         $values = [
                             'plugin_resources_resources_id' => $target_resources_id,
-                            'items_id' => $key,
+                            'items_id' => $item->getID(),
                             'itemtype' => $link_itemtype,
                         ];
 
@@ -3801,6 +4234,14 @@ class Resource extends CommonDBTM
                 // check that the hidden field made it through.
                 if (!empty($input['itemtype'])) {
                     foreach ($ids as $key => $val) {
+                        // The ids come from the posted list, untouched by the engine: the
+                        // identity of the user is copied into the resource, so the session has
+                        // to be allowed to read that user.
+                        if (!$item instanceof \User || !$item->can($key, READ)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            $messages[] = $item->getErrorMessage(ERROR_RIGHT);
+                            continue;
+                        }
                         [$id, $error, $message] = self::fastResourceAdd($key, $input);
                         if ($error['right']) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
@@ -3834,14 +4275,15 @@ class Resource extends CommonDBTM
                     // right and the entity of the row. The posted habilitation was validated
                     // before the switch.
                     if ($item->can($key, UPDATE)) {
+                        $resources_id = $item->getID();
                         //check if habilitation already added
                         if (!$habilitation->getFromDBByCrit([
-                            'plugin_resources_resources_id' => $key,
+                            'plugin_resources_resources_id' => $resources_id,
                             'plugin_resources_habilitations_id' => $habilitations_id,
                         ])) {
-                            if ($resource->getFromDB($key)) {
+                            if ($resource->getFromDB($resources_id)) {
                                 $values = [
-                                    'plugin_resources_resources_id' => $key,
+                                    'plugin_resources_resources_id' => $resources_id,
                                     'plugin_resources_habilitations_id' => $habilitations_id,
                                 ];
                                 if ($habilitation->add($values)) {
@@ -3865,14 +4307,24 @@ class Resource extends CommonDBTM
                 $habilitation = new ResourceHabilitation();
                 foreach ($ids as $key => $val) {
                     if ($item->can($key, UPDATE)) {
-                        $resource_item = new Resource_Item();
-                        if ($resource_item->getFromDBByCrit(['items_id' => $key, 'itemtype' => User::getType()])) {
-                            $resource_id = (int) $resource_item->getField('plugin_resources_resources_id');
-                            //check if habilitation already added
-                            if (!$habilitation->getFromDBByCrit([
+                        // The link of the core user to its resource. User::getType() named the
+                        // plugin class GlpiPlugin\Resources\User here, an itemtype no link
+                        // carries, so the action never found any resource. getFromDBByCrit()
+                        // throws on several rows: a user linked to more than one resource is
+                        // left out, as it was meant to be, instead of guessing which one.
+                        $user_links = (new Resource_Item())->find(
+                            ['items_id' => (int) $item->getID(), 'itemtype' => \User::class],
+                            [],
+                            2,
+                        );
+                        if (count($user_links) === 1) {
+                            $resource_id = (int) reset($user_links)['plugin_resources_resources_id'];
+                            // Check if the habilitation is already added (a count: duplicates
+                            // left by an older version would make getFromDBByCrit() throw)
+                            if (countElementsInTable($habilitation->getTable(), [
                                 'plugin_resources_resources_id' => $resource_id,
                                 'plugin_resources_habilitations_id' => $habilitations_id,
-                            ])) {
+                            ]) === 0) {
                                 // $item is a User on this branch, so the can(UPDATE) above is
                                 // the User write right and nothing more: it says nothing about
                                 // the plugin right, and nothing about the entity of the
@@ -3892,17 +4344,21 @@ class Resource extends CommonDBTM
                                         $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                                     }
                                 } else {
-                                    $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                                    $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                                    $ma->addMessage($resource->getErrorMessage(ERROR_RIGHT));
                                 }
                             } else {
                                 $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                             }
                         } else {
-                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
-                            $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                            // No resource, or several, linked to this user
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                         }
                     } else {
-                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                        // The outcomes were swapped: a refused right reported a failure, a
+                        // user without resource reported a refused right.
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
                     }
                 }
                 break;
@@ -3910,69 +4366,45 @@ class Resource extends CommonDBTM
     }
 
     /**
-     * Transfer resource
+     * Transfer a resource, and the rows attached to it, to another entity.
      *
-     * @param  $resources_id
-     * @param  $entities_id
+     * Only the resource named by $resources_id is moved, and only when the session may update
+     * it: the check is made here, on the row loaded, whatever the caller already tested.
+     *
+     * The former "users-<id>" form of the id, which created the resource or replaced it with
+     * a posted link_resources_id, is gone: no caller sends it (only the former addUnlinkedUsers
+     * branch of ajax/dropdownResources.php emitted it, and that branch is gone too), and it
+     * moved a resource nobody had been authorised on.
+     *
+     * @param int                  $resources_id id of the resource
+     * @param int                  $entities_id  destination entity
+     * @param array<string, mixed> $options      users_id: user to link to the resource
      *
      * @return bool
      */
-    public function transferResource($resources_id, $entities_id, $options = [])
+    public function transferResource(int $resources_id, int $entities_id, array $options = []): bool
     {
         global $DB;
 
-        $params['users_id'] = 0;
-        $params['itemtype'] = 'User';
-        $params['link_resources_id'] = 0;
-
         $dbu = new DbUtils();
-
-        foreach ($options as $key => $val) {
-            $params[$key] = $val;
-        }
 
         $resource_item = new Resource_Item();
 
-        if (strstr($resources_id, 'users')) {
-            [$tag, $users_id] = explode('-', $resources_id);
-        }
-
-        $resourceOk = $this->getFromDB($resources_id);
-        $source_entity = $this->fields['entities_id'];
-
-        if (!$resourceOk) {
-            // Link user to resource
-            if (!empty($params['link_resources_id'])) {
-                $input = [
-                    'plugin_resources_resources_id' => $params['link_resources_id'],
-                    'items_id' => $users_id,
-                    'itemtype' => $params['itemtype'],
-                ];
-                if ($resource_item->can(-1, 'w', $input)) {
-                    $resourceOk = $resource_item->add($input);
-                }
-                $resources_id = $params['link_resources_id'];
-                $resourceOk = $this->getFromDB($resources_id);
-                // Add resource
-            } else {
-                [$resources_id, $error, $message] = self::fastResourceAdd($users_id, $params);
-                if ($error['error'] || $error['right']) {
-                    $resourceOk = false;
-                } else {
-                    $resourceOk = $this->getFromDB($resources_id);
-                }
-            }
-        }
+        $resourceOk = $resources_id > 0 && $this->can($resources_id, UPDATE);
+        $source_entity = $this->fields['entities_id'] ?? 0;
 
         if ($resourceOk) {
-            // Link to a user if needed
-            if (!empty($params['users_id'])) {
+            // Link to a user if needed. The user is displayed on the resource afterwards, so
+            // it has to be readable as well.
+            $users_id = (int) ($options['users_id'] ?? 0);
+            if ($users_id > 0) {
                 $input = [
                     'plugin_resources_resources_id' => $resources_id,
-                    'items_id' => $params['users_id'],
-                    'itemtype' => $params['itemtype'],
+                    'items_id' => $users_id,
+                    'itemtype' => \User::class,
                 ];
-                if ($resource_item->can(-1, 'w', $input)) {
+                $user = new \User();
+                if ($user->can($users_id, READ) && $resource_item->can(-1, CREATE, $input)) {
                     $resource_item->add($input);
                 }
             }
@@ -3981,7 +4413,7 @@ class Resource extends CommonDBTM
             if ($contracttype > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_contracttypes_id"] = $contracttype;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
 
             unset($values);
@@ -3990,7 +4422,7 @@ class Resource extends CommonDBTM
             if ($resourcestate > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_resourcestates_id"] = $resourcestate;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
 
             unset($values);
@@ -3999,7 +4431,7 @@ class Resource extends CommonDBTM
             if ($department > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_departments_id"] = $department;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
 
             unset($values);
@@ -4011,7 +4443,7 @@ class Resource extends CommonDBTM
             if ($situation > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_resourcesituations_id"] = $situation;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
 
             unset($values);
@@ -4023,7 +4455,7 @@ class Resource extends CommonDBTM
             if ($contractnature > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_contractnatures_id"] = $contractnature;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
             unset($values);
 
@@ -4031,7 +4463,7 @@ class Resource extends CommonDBTM
             if ($rank > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_ranks_id"] = $rank;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
 
             unset($values);
@@ -4043,7 +4475,7 @@ class Resource extends CommonDBTM
             if ($speciality > 0) {
                 $values["id"] = $resources_id;
                 $values["plugin_resources_resourcespecialities_id"] = $speciality;
-                $this->update($values);
+                $this->updateFromWorkflow($values);
             }
             unset($values);
 
@@ -4061,6 +4493,9 @@ class Resource extends CommonDBTM
                     }
                     $values["id"] = $task["id"];
                     $values["entities_id"] = $entities_id;
+                    // An ordinary task update drops entities_id (see Task::prepareInputForUpdate()):
+                    // the tasks follow the resource, whose transfer the caller authorised.
+                    $Task->allow_entity_change = true;
                     $Task->update($values);
                 }
             }
@@ -4097,33 +4532,40 @@ class Resource extends CommonDBTM
 
             unset($values);
 
-            $Employee = new Employee();
-
-            $restrict = ["plugin_resources_resources_id" => $resources_id];
-            $employees = $dbu->getAllDataFromTable("glpi_plugin_resources_employees", $restrict);
-            if (!empty($employees)) {
-                foreach ($employees as $employee) {
-                    $employer = Employer::transfer($employee["plugin_resources_employers_id"], $entities_id);
-                    if ($employer > 0) {
-                        $values["id"] = $employee["id"];
-                        $values["plugin_resources_employers_id"] = $employer;
-                        $Employee->update($values);
-                    }
-
-                    $client = Client::transfer($employee["plugin_resources_clients_id"], $entities_id);
-                    if ($client > 0) {
-                        $values["id"] = $employee["id"];
-                        $values["plugin_resources_clients_id"] = $client;
-                        $Employee->update($values);
-                    }
-                }
-            }
-
-            unset($values);
-
             $values["id"] = $resources_id;
             $values["entities_id"] = $entities_id;
-            if ($this->update($values)) {
+            // An ordinary update drops entities_id (see prepareInputForUpdate()): this is the
+            // one write meant to move the resource, after its own checks and the caller's.
+            $this->allow_structural_fields = ['entities_id'];
+            $updated = $this->updateFromWorkflow($values);
+            $this->allow_structural_fields = [];
+            if ($updated) {
+                // The employer and the client are copied into the destination entity. They are
+                // written once the resource is there: Employee checks them against the entity
+                // of the resource (Employee::getAllowedLinkedId()).
+                unset($values);
+                $Employee = new Employee();
+
+                $restrict = ["plugin_resources_resources_id" => $resources_id];
+                $employees = $dbu->getAllDataFromTable("glpi_plugin_resources_employees", $restrict);
+                if (!empty($employees)) {
+                    foreach ($employees as $employee) {
+                        $employer = Employer::transfer($employee["plugin_resources_employers_id"], $entities_id);
+                        if ($employer > 0) {
+                            $values["id"] = $employee["id"];
+                            $values["plugin_resources_employers_id"] = $employer;
+                            $Employee->update($values);
+                        }
+
+                        $client = Client::transfer($employee["plugin_resources_clients_id"], $entities_id);
+                        if ($client > 0) {
+                            $values["id"] = $employee["id"];
+                            $values["plugin_resources_clients_id"] = $client;
+                            $Employee->update($values);
+                        }
+                    }
+                }
+
                 // Check list
                 $checklist_exist = Checklist::checkIfChecklistExist(
                     $resources_id,
@@ -4136,12 +4578,15 @@ class Resource extends CommonDBTM
                         'plugin_resources_resources_id' => $resources_id,
                         'checklist_type' => Checklist::RESOURCES_CHECKLIST_TRANSFER,
                     ]);
-                    $DB->update(
-                        'glpi_plugin_resources_checklists',
-                        ['entities_id' => (int) $entities_id],
-                        ['plugin_resources_resources_id' => (int) $resources_id],
-                    );
                 }
+                // The checklist rows take the entity of their resource, which can() checks on
+                // them (see Checklist::prepareInputForAdd()), and only move here: an ordinary
+                // update leaves it alone. Whatever the transfer checklist, they follow.
+                $DB->update(
+                    'glpi_plugin_resources_checklists',
+                    ['entities_id' => (int) $entities_id],
+                    ['plugin_resources_resources_id' => (int) $resources_id],
+                );
                 $checklistconfig->addChecklistsFromRules($this, Checklist::RESOURCES_CHECKLIST_TRANSFER);
 
                 // Notification
@@ -4463,7 +4908,8 @@ class Resource extends CommonDBTM
                 $input = [];
                 $input['id'] = $resourceD['id'];
                 $input["plugin_resources_resourcestates_id"] = $config->fields['plugin_resources_resourcestates_id_arrival'];
-                $resource->update($input);
+                // Scheduled state change: it applies to validated resources as well
+                $resource->updateFromWorkflow($input);
                 $task->addVolume(1);
             }
         }
@@ -4486,7 +4932,7 @@ class Resource extends CommonDBTM
                 $input = [];
                 $input['id'] = $resourceD['id'];
                 $input["plugin_resources_resourcestates_id"] = $config->fields['plugin_resources_resourcestates_id_departure'];
-                $resource->update($input);
+                $resource->updateFromWorkflow($input);
                 $task->addVolume(1);
             }
         }
@@ -4745,13 +5191,20 @@ class Resource extends CommonDBTM
         $users = [];
         foreach ($items as $key => $val) {
             // The ids come straight from the massive-action form: a resource the session
-            // cannot read must not disclose the mail addresses of the users behind it.
-            if (!$this->can($key, READ)) {
+            // cannot read must not disclose the mail addresses of the users behind it. The
+            // users are then looked up with the id checked, so a key that is not a plain id
+            // is skipped rather than cast.
+            try {
+                $resources_id = self::getPostedId($key);
+            } catch (BadRequestHttpException) {
+                continue;
+            }
+            if ($resources_id <= 0 || !$this->can($resources_id, READ)) {
                 continue;
             }
             $restrict = [
                 "itemtype" => 'User',
-                "plugin_resources_resources_id" => $key,
+                "plugin_resources_resources_id" => $this->getID(),
             ];
             $dbu = new DbUtils();
             $resources = $dbu->getAllDataFromTable("glpi_plugin_resources_resources_items", $restrict);

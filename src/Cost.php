@@ -41,6 +41,9 @@ use Session;
  */
 class Cost extends CommonDropdown
 {
+    // "Dropdown management" right of the profile, bit by bit
+    use DropdownPublicRightTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $can_be_translated = true;
 
@@ -52,39 +55,6 @@ class Cost extends CommonDropdown
     public static function getTypeName($nb = 0)
     {
         return _n('Budget cost', 'Budget costs', $nb, 'resources');
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
-            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, UPDATE)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        if (Session::haveRight(self::$rightname, READ)
-            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, READ)) {
-            return true;
-        }
-        return false;
     }
 
     /**

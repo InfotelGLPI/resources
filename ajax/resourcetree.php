@@ -33,18 +33,17 @@ Html::header_nocache();
 
 Session::checkRight(Resource::$rightname, READ);
 
-global $CFG_GLPI;
-
-// $_GET['target'] is reflected into an HTML attribute by showSelector(). Only accept
-// an internal same-origin path (prefixed by the GLPI web root, no character able to
-// break out of the attribute) and fall back to the default otherwise, to prevent a
-// reflected XSS / open redirect through an attacker-supplied target.
-if (
-    !isset($_GET['target'])
-    || !str_starts_with((string) $_GET['target'], $CFG_GLPI['root_doc'] . '/')
-    || preg_match('/[\s"\'<>]/', (string) $_GET['target'])
-) {
-    $_GET['target'] = PLUGIN_RESOURCES_WEBDIR . "/front/resource.php";
+// $_GET['target'] becomes the href of the "Show all" button rendered by showSelector(). A
+// prefix test on the web root let through "//host" or "/\host" when GLPI is served from
+// the web root, that is a link to any site from a genuine GLPI page. Only a known page of
+// the plugin is accepted now, compared as a whole string; anything else falls back to the
+// resource list, which is also what the only caller (front/resource.php) relies on.
+$allowed_targets = [
+    PLUGIN_RESOURCES_WEBDIR . "/front/resource.php",
+];
+$target = $_GET['target'] ?? null;
+if (!is_string($target) || !in_array($target, $allowed_targets, true)) {
+    $target = $allowed_targets[0];
 }
 
 // The page is loaded in the iframe of a modal: emit the standard modal document so the
@@ -52,6 +51,6 @@ if (
 // Wunderbaum, instead of rendering a bare fragment in quirks mode.
 Html::popHeader(__('View by contract type', 'resources'), '', true);
 
-Resource::showSelector($_GET['target']);
+Resource::showSelector($target);
 
 Html::popFooter();

@@ -34,6 +34,7 @@ use CommonGLPI;
 use DBConnection;
 use DbUtils;
 use Dropdown;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Html;
 use Migration;
 use Session;
@@ -44,7 +45,23 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class ReportConfig extends CommonDBTM
 {
+    // Rows of a resource: creating one is an update of the resource
+    use ResourceChildRightTrait;
+    // No entity of its own: the item rights are those of the resource
+    use ResourceChildItemRightTrait;
+
     public static string $rightname = 'plugin_resources';
+
+    /**
+     * Columns the form may write.
+     */
+    private const FORM_FIELDS = [
+        'comment',
+        'information',
+        'send_report_notif',
+        'send_other_notif',
+        'send_transfer_notif',
+    ];
 
     /**
      * Return the localized name of the current Type
@@ -76,17 +93,6 @@ class ReportConfig extends CommonDBTM
     public static function canView(): bool
     {
         return Session::haveRight(self::$rightname, READ);
-    }
-
-    /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE]);
     }
 
     /**
@@ -156,11 +162,39 @@ class ReportConfig extends CommonDBTM
      **/
     public function prepareInputForAdd($input)
     {
+        // The form posts its whole request: keep the columns it owns and the resource
+        $input = self::keepWritableColumns($input, array_merge(self::FORM_FIELDS, ['plugin_resources_resources_id']));
+
         // Not attached to reference -> not added
-        if (!isset($input['plugin_resources_resources_id']) || $input['plugin_resources_resources_id'] <= 0) {
-            return false;
+        try {
+            $resources_id = Resource::getPostedId($input['plugin_resources_resources_id'] ?? null);
+        } catch (BadRequestHttpException) {
+            $resources_id = 0;
         }
+        if ($resources_id <= 0) {
+            return [];
+        }
+        $input['plugin_resources_resources_id'] = $resources_id;
+
+        // One setup per resource: with a second row, getFromDBByResource() found none and
+        // the report of the resource could no longer be sent.
+        if (countElementsInTable(self::getTable(), ['plugin_resources_resources_id' => $resources_id]) > 0) {
+            Session::addMessageAfterRedirect(
+                __('A notification setup already exists for this resource', 'resources'),
+                false,
+                ERROR,
+            );
+            return [];
+        }
+
         return $input;
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // The setup stays with the resource it was created for (the one canUpdateItem()
+        // answered for), and only the columns of the form are written.
+        return self::keepWritableColumns($input, array_merge(self::FORM_FIELDS, ['id']));
     }
 
     /**
@@ -192,9 +226,13 @@ class ReportConfig extends CommonDBTM
     {
         global $DB;
 
+        // Rows created before prepareInputForAdd() refused a second one may still come in pairs:
+        // take the first, the one showReports() displays, rather than none at all.
         $iterator = $DB->request([
             'FROM'  => $this->getTable(),
             'WHERE' => ['plugin_resources_resources_id' => (int) $plugin_resources_resources_id],
+            'ORDER' => 'id ASC',
+            'LIMIT' => 1,
         ]);
         if (count($iterator) != 1) {
             return false;

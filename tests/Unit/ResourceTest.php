@@ -39,7 +39,7 @@ class ResourceTest extends TestCase
     {
         global $DB;
         $_SESSION['glpiactiveprofile'] = [];
-        // Session::haveRight() et Rank::canCreate() nécessitent $DB->isReplica()
+        // Session::haveRight() et Rank::canFillPublicSectorFields() nécessitent $DB->isReplica()
         $DB = new class {
             public function isReplica(): bool
             {

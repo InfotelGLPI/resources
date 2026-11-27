@@ -403,20 +403,23 @@ if ($report->criteriasValidated()) {
 
         echo ReportExport::showNewLine($output_type);
 
-        showTitle($output_type, $num, ProfessionLine::getTypeName(1), 'professionline', true);
-        showTitle($output_type, $num, ProfessionCategory::getTypeName(1), 'professioncategory', true);
-        showTitle($output_type, $num, Profession::getTypeName(1), 'profession', true);
+        // Criteria of the report, carried over by the sort links of the column headers
+        $sort_criteria = $report->getRequestParameters();
+        showTitle($output_type, $num, $sort_criteria, ProfessionLine::getTypeName(1), 'professionline', true);
+        showTitle($output_type, $num, $sort_criteria, ProfessionCategory::getTypeName(1), 'professioncategory', true);
+        showTitle($output_type, $num, $sort_criteria, Profession::getTypeName(1), 'profession', true);
         showTitle(
             $output_type,
             $num,
+            $sort_criteria,
             Profession::getTypeName(1) . " - " . __('Code', 'resources'),
             'profession_code',
             true,
         );
-        showTitle($output_type, $num, Rank::getTypeName(1), 'rank_name', true);
-        showTitle($output_type, $num, Rank::getTypeName(1) . " - " . __('Code', 'resources'), 'rank_code', true);
-        showTitle($output_type, $num, __('Begin date'), 'begin_date', true);
-        showTitle($output_type, $num, __('End date'), 'end_date', true);
+        showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1), 'rank_name', true);
+        showTitle($output_type, $num, $sort_criteria, Rank::getTypeName(1) . " - " . __('Code', 'resources'), 'rank_code', true);
+        showTitle($output_type, $num, $sort_criteria, __('Begin date'), 'begin_date', true);
+        showTitle($output_type, $num, $sort_criteria, __('End date'), 'end_date', true);
 
         echo ReportExport::showEndLine($output_type);
 
@@ -424,16 +427,13 @@ if ($report->criteriasValidated()) {
             $dataAll = array_slice($dataAll, $start, $limit);
         }
 
-        // Escape raw DB values (resource identity, rank/profession labels) before output:
-        // ReportExport::showItem() concatenates its value straight into the <td>, and GLPI 10+
-        // stores these fields unencoded, so a crafted value would otherwise run as HTML.
-        $escape = static fn($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
-
+        // Raw DB values (rank/profession labels and codes): ReportExport::showItem() escapes
+        // every plain value itself.
         foreach ($dataAll as $key => $data) {
             $num = 1;
             if (!is_numeric($data['professionline'])) {
                 echo ReportExport::showNewLine($output_type);
-                echo ReportExport::showItem($output_type, $escape($data['professionline']), $num, $key);
+                echo ReportExport::showItem($output_type, $data['professionline'], $num, $key);
                 echo ReportExport::showItem($output_type, '', $num, $key);
                 echo ReportExport::showItem($output_type, '', $num, $key);
                 echo ReportExport::showItem($output_type, '', $num, $key);
@@ -447,36 +447,32 @@ if ($report->criteriasValidated()) {
                 echo ReportExport::showNewLine($output_type);
                 echo ReportExport::showItem(
                     $output_type,
-                    $escape(
-                        Dropdown::getDropdownName(
-                            'glpi_plugin_resources_professionlines',
-                            $data['professionline'],
-                        ),
+                    Dropdown::getDropdownName(
+                        'glpi_plugin_resources_professionlines',
+                        $data['professionline'],
                     ),
                     $num,
                     $key,
                 );
                 echo ReportExport::showItem(
                     $output_type,
-                    $escape(
-                        Dropdown::getDropdownName(
-                            'glpi_plugin_resources_professioncategories',
-                            $data['professioncategory'],
-                        ),
+                    Dropdown::getDropdownName(
+                        'glpi_plugin_resources_professioncategories',
+                        $data['professioncategory'],
                     ),
                     $num,
                     $key,
                 );
-                echo ReportExport::showItem($output_type, $escape($data['profession']), $num, $key);
-                echo ReportExport::showItem($output_type, $escape($data['profession_code']), $num, $key);
+                echo ReportExport::showItem($output_type, $data['profession'], $num, $key);
+                echo ReportExport::showItem($output_type, $data['profession_code'], $num, $key);
                 if ($data['rank_name'] == '0') {
                     $data['rank_name'] = '';
                 }
-                echo ReportExport::showItem($output_type, $escape($data['rank_name']), $num, $key);
+                echo ReportExport::showItem($output_type, $data['rank_name'], $num, $key);
                 if ($data['rank_code'] == '0') {
                     $data['rank_code'] = '';
                 }
-                echo ReportExport::showItem($output_type, $escape($data['rank_code']), $num, $key);
+                echo ReportExport::showItem($output_type, $data['rank_code'], $num, $key);
                 echo ReportExport::showItem($output_type, Html::convDate($data['begin_date']), $num, $key);
                 echo ReportExport::showItem($output_type, Html::convDate($data['end_date']), $num, $key);
                 echo ReportExport::showEndLine($output_type);
@@ -494,14 +490,15 @@ if ($output_type == Search::HTML_OUTPUT) {
 /**
  * Display the column title and allow the sort
  *
- * @param $output_type
- * @param $num
- * @param $title
- * @param $columnname
- * @param bool $sort
- * @return mixed
+ * @param int|string           $output_type
+ * @param int                  $num
+ * @param array<string, mixed> $criteria    parameters of the report criteria, kept by the sort link
+ * @param string               $title
+ * @param string               $columnname
+ * @param bool                 $sort
+ * @return void
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort = false)
+function showTitle($output_type, &$num, array $criteria, $title, $columnname, $sort = false)
 {
     if ($output_type != Search::HTML_OUTPUT || $sort == false) {
         echo ReportExport::showHeaderItem($output_type, $title, $num);
@@ -515,17 +512,9 @@ function showTitle($output_type, &$num, $title, $columnname, $sort = false)
             $order = 'DESC';
         }
     }
-    $link = PLUGIN_RESOURCES_WEBDIR . '/report/professionwithoutcost/professionwithoutcost.php';
-    $first = true;
-    foreach ($_REQUEST as $name => $value) {
-        if (!in_array($name, ['sort', 'order', 'PHPSESSID'])) {
-            $link .= ($first ? '?' : '&amp;');
-            $link .= $name . '=' . urlencode($value);
-            $first = false;
-        }
-    }
-    $link .= ($first ? '?' : '&amp;') . 'sort=' . urlencode($columnname);
-    $link .= '&amp;order=' . $order;
+    // Built from the report criteria only, never by replaying $_REQUEST: see
+    // ReportExport::getSortLink()
+    $link = ReportExport::getSortLink(PLUGIN_RESOURCES_WEBDIR . '/report/professionwithoutcost/professionwithoutcost.php', $criteria, $columnname, $order);
     echo ReportExport::showHeaderItem(
         $output_type,
         $title,

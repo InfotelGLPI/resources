@@ -42,6 +42,9 @@ use Glpi\Application\View\TemplateRenderer;
  */
 class Rank extends CommonDropdown
 {
+    // "Dropdown management" right of the profile, bit by bit
+    use DropdownPublicRightTrait;
+
     public static string $rightname = 'plugin_resources';
     public bool $can_be_translated = true;
     /**
@@ -55,36 +58,19 @@ class Rank extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
+     * Whether the active profile fills the public sector fields of a resource (rank,
+     * situation, recruitment and leaving details): the required-field rules of those fields
+     * only apply to such a profile.
      *
-     * @return
-     **/
-    public static function canCreate(): bool
+     * This is the test the former canCreate() of this class performed, which the required
+     * fields of Resource and LeavingInformation relied on. It is kept as it was: the rights
+     * of the dropdown itself have been tightened since (DropdownPublicRightTrait), and that
+     * must not change which fields a requester has to fill.
+     */
+    public static function canFillPublicSectorFields(): bool
     {
-        if (Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, DELETE])
-            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, UPDATE)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Have I the global right to "view" the Object
-     *
-     * Default is true and check entity if the objet is entity assign
-     *
-     * May be overloaded if needed
-     *
-     * @return
-     **/
-    public static function canView(): bool
-    {
-        if (Session::haveRight(self::$rightname, READ)
-            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, READ)) {
-            return true;
-        }
-        return false;
+        return Session::haveRightsOr(Resource::$rightname, [CREATE, UPDATE, DELETE])
+            && Session::haveRight(Profile::RIGHT_DROPDOWN_PUBLIC, UPDATE);
     }
 
 

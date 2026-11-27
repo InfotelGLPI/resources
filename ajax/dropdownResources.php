@@ -27,184 +27,90 @@
  * --------------------------------------------------------------------------
  */
 
-// Direct access to file
-use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Resources\Resource;
 
-global $DB;
-
-if (strpos($_SERVER['PHP_SELF'], "dropdownResources.php")) {
-    header("Content-Type: text/html; charset=UTF-8");
+// A JSON document on every path, the script being reached directly or included. Declared as
+// text/html, a browser opening the URL would render the names it carries as markup.
+if (!headers_sent()) {
+    header("Content-Type: application/json; charset=UTF-8");
     Html::header_nocache();
 }
 
-if (empty($_GET)) {
-    $_GET = $_POST;
-}
-
 Session::checkRight(Resource::$rightname, READ);
-// Default view : Nobody
-if (!isset($_GET['all'])) {
-    $_GET['all'] = 0;
-}
+
+// Its only caller, the select2 of Resource::dropdown() (Html::jsAjaxDropdown()), posts its
+// parameters, as the core dropdown endpoint expects too: a plain link opened by navigation
+// gets nothing.
+$params = $_POST;
 
 $used = [];
 
-if (isset($_GET['used'])) {
-    if (is_array($_GET['used'])) {
-        $used = $_GET['used'];
+if (isset($params['used'])) {
+    if (is_array($params['used'])) {
+        $used = $params['used'];
     } else {
-        $used = Toolbox::decodeArrayFromInput($_GET['used']);
+        $used = Toolbox::decodeArrayFromInput($params['used']);
     }
 }
 
-if (!isset($_GET['searchText'])) {
-    $_GET['searchText'] = '';
-}
-
-$plugin_resources_contracttypes_id = 0;
-if (isset($_GET["plugin_resources_contracttypes_id"]) &&
-    $_GET["plugin_resources_contracttypes_id"] > 0) {
-    $plugin_resources_contracttypes_id = $_GET["plugin_resources_contracttypes_id"];
-}
+$search_text = is_string($params['searchText'] ?? null) ? $params['searchText'] : '';
 
 $isNotLeavingOnly = false;
-if (isset($_GET['condition']) && isset($_GET['condition']['is_not_leaving_only'])) {
+if (isset($params['condition']) && is_array($params['condition']) && isset($params['condition']['is_not_leaving_only'])) {
     $isNotLeavingOnly = true;
 }
 
-// Entity scoping: $_GET['entity'] is a client-controlled list of entity ids reused both
-// as the getSqlSearchResult()/getEntitiesRestrictCriteria() filter and in the raw
-// "entities_id IN (...)" clause below. getEntitiesRestrictCriteria() trusts the ids as
-// given (GLPI does not confine queries automatically), so without this intersection a
-// user holding plugin_resources READ in one entity could force entity[]=<other entities>
-// and enumerate the personnel/user directory across the whole entity tree. Confine the
-// requested entities to the active session scope; fall back to the full active scope
-// when the caller sends nothing valid.
-$requested_entities = isset($_GET['entity']) ? (array) $_GET['entity'] : [];
+// Entity scoping: $params['entity'] is a client-controlled list of entity ids reused as the
+// getSqlSearchResult()/getEntitiesRestrictCriteria() filter. getEntitiesRestrictCriteria()
+// trusts the ids as given (GLPI does not confine queries automatically), so without this
+// intersection a user holding plugin_resources READ in one entity could force
+// entity[]=<other entities> and enumerate the personnel directory across the whole entity
+// tree. Confine the requested entities to the active session scope; fall back to the full
+// active scope when the caller sends nothing valid.
+$requested_entities = isset($params['entity']) ? (array) $params['entity'] : [];
 $requested_entities = array_map('intval', $requested_entities);
 $allowed_entities   = array_values(array_intersect($requested_entities, $_SESSION['glpiactiveentities'] ?? []));
 if (empty($allowed_entities)) {
     $allowed_entities = $_SESSION['glpiactiveentities'] ?? [];
 }
-$_GET['entity'] = $allowed_entities;
 
+// Resources only. The former "addUnlinkedUsers" branch also listed glpi_users, matching on
+// logins and registration numbers, on the resource right alone: no caller enabled it.
 $result = Resource::getSqlSearchResult(
     false,
-    $_GET["entity"],
-    $_GET['value2'],
+    $allowed_entities,
+    $params['value2'] ?? 0,
     $used,
-    $_GET['searchText'],
+    $search_text,
     false,
     $isNotLeavingOnly,
 );
 
 $users = [];
-$logins = [];
-$linkedUsers = [];
 
 $dbu = new DbUtils();
 
-// Add linked resource users
-if (count($result)) {
-    foreach ($result as $data) {
-        $users[] = [
-            'id' => $data["id"],
-            'text' => $dbu->formatUserName(
-                $data["id"],
-                $data["username"],
-                $data["name"],
-                $data["firstname"],
-            ),
-        ];
-        //      $logins[$data["id"]] = $data["name"];
-        $linkedUsers[] = $data["userid"];
-    }
-}
-
-// Add unlinked users
-if ($_GET['addUnlinkedUsers'] ?? false) {
-    // The entity list has been confined to the session scope above. An empty list therefore
-    // means the session sees no entity at all and no user can match, which is also why the
-    // query is skipped instead of being run: the builder rejects an empty IN(), and the string
-    // concatenation it replaces used to emit "IN ()", a syntax error.
-    if (!empty($_GET["entity"])) {
-        // makeTextSearchValue() returns the LIKE pattern. The loose comparison below mirrors
-        // makeTextSearch(), which also falls back to IS NULL on an empty pattern, so the
-        // "NULL" keyword and an empty search string keep behaving as they did. A null
-        // criterion is turned into IS NULL by the builder. Only the concatenation still needs
-        // the raw fragment, see below.
-        $search_value = Search::makeTextSearchValue($_GET['searchText']);
-        $search_crit  = $search_value == null ? null : ['LIKE', $search_value];
-
-        $criteria = [
-            'FROM'  => 'glpi_users',
-            'WHERE' => [
-                'glpi_users.entities_id' => $_GET["entity"],
-                'glpi_users.is_deleted'  => 0,
-                [
-                    'OR' => [
-                        'glpi_users.name'                => $search_crit,
-                        'glpi_users.firstname'           => $search_crit,
-                        'glpi_users.realname'            => $search_crit,
-                        'glpi_users.registration_number' => $search_crit,
-                        // A function call cannot be a criteria key, so this last comparison
-                        // stays an expression, built the way Resource::getSqlSearchResult()
-                        // builds its own.
-                        new QueryExpression(
-                            'CONCAT(' . $DB->quoteName('glpi_users.name') . ', '
-                            . $DB->quoteValue(' ') . ', '
-                            . $DB->quoteName('glpi_users.firstname') . ', '
-                            . $DB->quoteValue(' ') . ', '
-                            . $DB->quoteName('glpi_users.registration_number') . ', '
-                            . $DB->quoteValue(' ') . ', '
-                            . $DB->quoteName('glpi_users.name') . ')'
-                            // makeTextSearch() now returns an unbound "LIKE ?": quote the pattern
-                            . ($search_value == null ? ' IS NULL' : ' LIKE ' . $DB->quoteValue($search_value)),
-                        ),
-                    ],
-                ],
-            ],
-        ];
-
-        // Same reasoning for the exclusion list: no linked user means there is nothing to
-        // exclude, not an empty NOT IN().
-        $linked_users = array_values(array_unique(array_filter(array_map('intval', $linkedUsers))));
-        if (!empty($linked_users)) {
-            $criteria['WHERE']['glpi_users.id'] = ['NOT IN', $linked_users];
-        }
-
-        foreach ($DB->request($criteria) as $data) {
-            $users[] = [
-                'id' => 'users-' . $data["id"],
-                'text' => $dbu->formatUserName(
-                    $data["id"],
-                    $data["name"],
-                    $data["realname"],
-                    $data["firstname"],
-                ),
-            ];
-        }
-    }
-}
-
-if (!function_exists('dpuser_cmp')) {
-    /**
-     * @param $a
-     * @param $b
-     *
-     * @return int
-     */
-    function dpuser_cmp($a, $b)
-    {
-        return strcasecmp($a['text'], $b['text']);
-    }
+foreach ($result as $data) {
+    // Raw text: the select2 templates of the core escape it on display
+    $users[] = [
+        'id' => $data["id"],
+        'text' => $dbu->formatUserName(
+            $data["id"],
+            $data["username"],
+            $data["name"],
+            $data["firstname"],
+        ),
+    ];
 }
 
 // Sort non case sensitive
-usort($users, 'dpuser_cmp');
+usort($users, static fn($a, $b) => strcasecmp($a['text'], $b['text']));
 
-$ret['results'] = $users;
-$ret['count'] = count($users);
+$ret = [
+    'results' => $users,
+    'count'   => count($users),
+];
 
-echo json_encode($ret);
+// The hex flags keep the body inert even if it were sniffed as HTML: <, >, &, ' and " are
+// written as \u escapes, which JSON.parse() turns back into the same characters.
+echo json_encode($ret, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);

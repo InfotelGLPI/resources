@@ -97,33 +97,52 @@ class ResourceImport extends CommonDBChild
         return '';
     }
 
-    /**
-     * Create New Resource and linked ResourceImport
-     * Delete ImportResource and ImportResourceData
-     *
-     * @param array $input
-     * @param array $options
-     * @param bool $history
-     * @return int|null
-     */
-    public function add(array $input, $options = [], $history = true)
+    public function prepareInputForUpdate($input)
     {
-        $importID = $input['importID'];
+        // An imported value stays the value of its column for its resource: the name and the
+        // parent are set when the row is created, only the value changes afterwards.
+        foreach (array_keys($input) as $key) {
+            if (!in_array($key, ['id', 'value'], true) && !str_starts_with((string) $key, '_')) {
+                unset($input[$key]);
+            }
+        }
+
+        return parent::prepareInputForUpdate($input);
+    }
+
+    /**
+     * Create a resource, and the imported values attached to it, from a staged import row.
+     *
+     * This used to override add(), giving it another meaning: any generic entry point (the
+     * legacy API among them) creating a ResourceImport created a Resource instead, with
+     * force = 1 and without the right to create one being checked.
+     *
+     * @param int                 $import_id id of the staged row (ImportResource)
+     * @param array<mixed, mixed> $datas     values posted, keyed by ImportResourceData id
+     *
+     * @return int id of the resource created
+     */
+    public function createResourceFromImport(int $import_id, array $datas): int
+    {
+        $resourceInputs = [];
+        $resourceInputs['entities_id'] = $_SESSION['glpiactive_entity'];
+
+        // The resource is created in the active entity, with force = 1 below (no required
+        // fields): the right to create one there is checked before anything else.
+        $check_input = ['entities_id' => $resourceInputs['entities_id']];
+        (new Resource())->check(-1, CREATE, $check_input);
 
         $pluginResourcesImportResource = new ImportResource();
         $pluginResourcesImportResourceData = new ImportResourceData();
         $pluginResourcesImportColumn = new ImportColumn();
 
-        if (!$pluginResourcesImportResource->getFromDB($importID)) {
+        if (!$pluginResourcesImportResource->getFromDB($import_id)) {
             throw new BadRequestHttpException('ImportResource not found');
         }
 
-        $resourceInputs = [];
-        $resourceInputs['entities_id'] = $_SESSION['glpiactive_entity'];
-
         $resourceImportInputs = [];
 
-        foreach ($input['datas'] as $importResourceDataID => $inputValue) {
+        foreach ($datas as $importResourceDataID => $inputValue) {
             if (!$pluginResourcesImportResourceData->getFromDB($importResourceDataID)) {
                 throw new BadRequestHttpException('ImportResourceData not found');
             }
@@ -176,15 +195,31 @@ class ResourceImport extends CommonDBChild
 
         foreach ($resourceImportInputs as $resourceImportInput) {
             $resourceImportInput[ResourceImport::$items_id] = $resourceID;
-            if (!parent::add($resourceImportInput)) {
+            if (!(new self())->add($resourceImportInput)) {
                 throw new BadRequestHttpException('Failed to create resourceimports');
             }
         }
+
+        return (int) $resourceID;
     }
 
-    public function update(array $input, $history = 1, $options = [])
+    /**
+     * Write the values of a staged import row into an existing resource and its imported
+     * values.
+     *
+     * This used to override update(), giving it another meaning: any generic entry point
+     * updating a ResourceImport rewrote the resource named by the input, without any check.
+     *
+     * @param int                 $resources_id resource to update
+     * @param array<mixed, mixed> $datas        values posted, keyed by ImportResourceData id
+     *
+     * @return bool
+     */
+    public function importIntoResource(int $resources_id, array $datas): bool
     {
-        $resourceID = $input['resourceID'];
+        // Right and entity of the resource rewritten, whatever the caller already checked
+        (new Resource())->check($resources_id, UPDATE);
+        $resourceID = $resources_id;
 
         $pluginResourcesImportResourceData = new ImportResourceData();
         $pluginResourcesResourceImport = new ResourceImport();
@@ -192,7 +227,7 @@ class ResourceImport extends CommonDBChild
 
         $resourceInputs = ['id' => $resourceID];
 
-        foreach ($input['datas'] as $importResourceDataID => $inputValue) {
+        foreach ($datas as $importResourceDataID => $inputValue) {
             if (!$pluginResourcesImportResourceData->getFromDB($importResourceDataID)) {
                 throw new BadRequestHttpException('ImportResourceData not found');
             }
@@ -216,11 +251,10 @@ class ResourceImport extends CommonDBChild
                     if ($pluginResourcesResourceImport->getFromDBByCrit($criterias)) {
                         $resourceImportInput = [
                             ResourceImport::getIndexName() => $pluginResourcesResourceImport->getID(),
-                            "plugin_resources_resources_id" => $resourceID,
                             'value' => $inputValue,
                         ];
 
-                        if (!parent::update($resourceImportInput)) {
+                        if (!(new self())->update($resourceImportInput)) {
                             throw new BadRequestHttpException('Error when updating Resource Import');
                         }
                         // Resource import doesn't exist yet
@@ -231,7 +265,7 @@ class ResourceImport extends CommonDBChild
                             'value' => $inputValue,
                         ];
 
-                        if (!parent::add($resourceImportInput)) {
+                        if (!(new self())->add($resourceImportInput)) {
                             throw new BadRequestHttpException('Error when creating Resource Import');
                         }
                     }
@@ -248,10 +282,16 @@ class ResourceImport extends CommonDBChild
 
         $resource = new Resource();
 
-        // Update resource column
-        if (!$resource->update($resourceInputs)) {
+        // Update resource column. The import setup may map a column on the writer of the
+        // resource, a column an ordinary update no longer writes (see
+        // Resource::prepareInputForUpdate()): the import is the server code allowed to. The
+        // import keeps the resources in line with the HR source, validated ones included.
+        $resource->allow_structural_fields = ['users_id_recipient'];
+        if (!$resource->updateFromWorkflow($resourceInputs)) {
             throw new BadRequestHttpException('Error when updating Resource Import');
         }
+
+        return true;
     }
 
     /**

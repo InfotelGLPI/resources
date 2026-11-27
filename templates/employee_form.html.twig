@@ -82,12 +82,17 @@
                                 {{ _x('button', 'Add') }}
                             </button>
                         {% else %}
-                            <button type="submit" name="updateemployee" value="1" class="btn btn-primary me-5">
-                                {{ _x('button', 'Update') }}
-                            </button>
-                            <button type="submit" name="deleteemployee" value="1" class="btn btn-primary">
-                                {{ _x('button', 'Delete permanently') }}
-                            </button>
+                            {# Each button on the right its handler requires (UPDATE, PURGE) #}
+                            {% if buttons.can_update %}
+                                <button type="submit" name="updateemployee" value="1" class="btn btn-primary me-5">
+                                    {{ _x('button', 'Update') }}
+                                </button>
+                            {% endif %}
+                            {% if buttons.can_purge %}
+                                <button type="submit" name="deleteemployee" value="1" class="btn btn-primary">
+                                    {{ _x('button', 'Delete permanently') }}
+                                </button>
+                            {% endif %}
                         {% endif %}
                     </div>
                 {% endif %}

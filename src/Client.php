@@ -64,17 +64,6 @@ class Client extends CommonDropdown
     }
 
     /**
-     * Have I the global right to "create" the Object
-     * May be overloaded if needed (ex KnowbaseItem)
-     *
-     * @return
-     **/
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(\CommonDropdown::$rightname, [CREATE, UPDATE, DELETE]);
-    }
-
-    /**
      * @param array $options
      *
      * @return array
