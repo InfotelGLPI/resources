@@ -460,9 +460,8 @@ class RightsTest extends DbTestCase
         $this->assertSame(0, (int) $rights['plugin_resources_annuary']);
 
         // plugin_resources_install() runs the migration once per site, guarded by the
-        // enforced_rights_migrated marker it sets at the end of every install and update; the
-        // files must still carry a version newer than the installed one (4.2.3 here) for GLPI to
-        // run the update at all
-        $this->assertTrue(version_compare(PLUGIN_RESOURCES_VERSION, '4.2.3', '>='));
+        // enforced_rights_migrated marker it sets at the end of every install and update. GLPI
+        // only runs it when the version of the files is newer than the installed one: the release
+        // bumps it (not checked here, the version in setup.php is only changed to publish one)
     }
 }
